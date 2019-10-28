@@ -18,9 +18,75 @@ You also will need to prepare valid SSL certificate.
 
 # How-to
 
+# Run-log 
+
+## DSN module tests : 
+- Created code [modules/dns_godaddy](modules/dns_godaddy)
+- Test code : 
+```terraform
+module "dns_godaddy" {
+  source = "./modules/dns_godaddy"
+
+  host      = "ptfe-pm-1"
+  domain    = "guselietov.com"
+  record_ip = "192.168.1.3"
+}
+```
+- Terraform init 
+- Terraform apply : 
+```zsh
+terraform apply
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # module.dns_godaddy.godaddy_domain_record.dns_godaddy_a_record will be created
+  + resource "godaddy_domain_record" "dns_godaddy_a_record" {
+      + domain = "guselietov.com"
+      + id     = (known after apply)
+
+      + record {
+          + data     = "192.168.1.3"
+          + name     = "ptfe-pm-1"
+          + priority = 0
+          + ttl      = 600
+          + type     = "A"
+        }
+      + record {
+          + data     = "@"
+          + name     = "www"
+          + priority = 0
+          + ttl      = 3600
+          + type     = "CNAME"
+        }
+      + record {
+          + data     = "_domainconnect.gd.domaincontrol.com"
+          + name     = "_domainconnect"
+          + priority = 0
+          + ttl      = 3600
+          + type     = "CNAME"
+        }
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_a_record: Creating...
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_a_record: Creation complete after 6s [id=266392926]
+```
+
+
 # TODO
 - [ ] create code for instance deploys and EBS creation
-  - [ ] DNS module
+  - [x] DNS module
   - [ ] create SSL keys module
   - [ ] instance module ( including EBS)
   - [ ] main code
