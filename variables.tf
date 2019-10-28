@@ -34,7 +34,7 @@ variable "vpc_security_group_ids" {
 }
 
 variable "instance_type" {
-  default = "t2.micro"
+  default = "m5.large"
 }
 
 variable "learntag" {

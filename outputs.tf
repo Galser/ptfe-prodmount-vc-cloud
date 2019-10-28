@@ -28,3 +28,7 @@ output "public_ip" {
 output "public_dns" {
   value = "${aws_instance.ptfe.public_dns}"
 }
+
+output "full_site_name" {
+  value = "${var.site_record}.${var.site_domain}"
+}

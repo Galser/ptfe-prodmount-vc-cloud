@@ -3,7 +3,7 @@ module "dns_godaddy" {
 
   host      = var.site_record
   domain    = var.site_domain
-  record_ip = "192.168.1.3"
+  record_ip = "${aws_instance.ptfe.public_ip}"
 }
 
 module "sslcert_letsencrypt" {
@@ -42,6 +42,10 @@ resource "aws_instance" "ptfe" {
   subnet_id              = var.subnet_ids[var.region]
   vpc_security_group_ids = [var.vpc_security_group_ids[var.region]]
   key_name               = "${aws_key_pair.ptfe-key.id}"
+
+   root_block_device {
+        volume_size = 40
+   }
 
   ebs_block_device {
     device_name           = "/dev/sdg"
