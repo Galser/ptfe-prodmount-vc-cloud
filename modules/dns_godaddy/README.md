@@ -35,4 +35,7 @@ See [installation](#installation) section below  for more details
     export GODADDY_API_KEY=MY_KEY
     export GODADDY_API_SECRET=MY_SECRET
     ```
-
+- GoDaddy provider init : 
+```terraform
+provider "godaddy" {}
+```

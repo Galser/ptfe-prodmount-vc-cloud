@@ -83,11 +83,41 @@ module.dns_godaddy.godaddy_domain_record.dns_godaddy_a_record: Creating...
 module.dns_godaddy.godaddy_domain_record.dns_godaddy_a_record: Creation complete after 6s [id=266392926]
 ```
 
+## SSL Module test 
+- Code of module here : [modules/sslcert_letsencrypt](modules/sslcert_letsencrypt) 
+- Test code : 
+```terraform
+module "sslcert_letsencrypt" {
+  source = "./modules/sslcert_letsencrypt"
+
+  host      = var.site_record
+  domain    = var.site_domain
+} 
+```
+- Output of apply : 
+```zsh
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_a_record: Modifying... [id=266392926]
+module.sslcert_letsencrypt.acme_certificate.certificate: Creating...
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_a_record: Modifications complete after 5s [id=266392926]
+module.sslcert_letsencrypt.acme_certificate.certificate: Still creating... [10s elapsed]
+module.sslcert_letsencrypt.acme_certificate.certificate: Still creating... [20s elapsed]
+module.sslcert_letsencrypt.acme_certificate.certificate: Still creating... [30s elapsed]
+module.sslcert_letsencrypt.acme_certificate.certificate: Creation complete after 38s [id=https://acme-v02.api.letsencrypt.org/acme/cert/035a5ed202a09ab4f926a4d99ae50f9bdfb5]
+
+Apply complete! Resources: 1 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+cert_bundle = -----BEGIN CERTIFICATE-----
+MIIFajCCBFKgAwIBAgISA1pe0gKgmrT5JqTZmuUPm9+1MA0GCSqGSIb3DQEBCwUA
+MEoxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MSMwIQYDVQQD
+```
+
 
 # TODO
 - [ ] create code for instance deploys and EBS creation
   - [x] DNS module
-  - [ ] create SSL keys module
+  - [ ] create SSL keys/cert module
   - [ ] instance module ( including EBS)
   - [ ] main code
 - [ ] install TFE in Prod mode, write down steps
