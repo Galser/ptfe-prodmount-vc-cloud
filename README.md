@@ -17,6 +17,89 @@ To learn more about the mentioned above tools and technologies -  please check s
 You also will need to prepare valid SSL certificate.
 
 # How-to
+- clone repo
+- run TF init
+- run TF apply
+( possible problems - GoDaddy stuck with DNS update..how to avoid?)
+- Login to instance
+- Run TFE install
+```bash
+curl https://install.terraform.io/ptfe/stable | sudo bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  118k  100  118k    0     0  48967      0  0:00:02  0:00:02 --:--:-- 48967
+Determining local address
+The installer will use network interface 'ens5' (with IP address '172.31.2.88')
+Determining service address
+The installer will use service address '52.59.146.33' (discovered from EC2 metadata service)
+The installer has automatically detected the service IP address of this machine as 52.59.146.33.
+Do you want to:
+[0] default: use 52.59.146.33
+[1] enter new address
+Enter desired number (0-1): 0
+Does this machine require a proxy to access the Internet? (y/N) n
+Installing docker version 18.09.2 from https://get.replicated.com/docker-install.sh
+# Executing docker install script, commit: UNKNOWN 
+...
++ sh -c apt-get update -qq >/dev/null
++ sh -c apt-get install -y -qq apt-transport-https ca-certificates curl >/dev/null...
+Operator installation successful
+
+To continue the installation, visit the following URL in your browser:
+
+  http://52.59.146.33:8800
+
+```
+- Web-portion : 
+...
+...
+- Find and make the disk : 
+  - Determine the disk : 
+  ```bash
+  root@ip-172-31-2-88:~# lsblk
+  NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+  loop0         7:0    0 88.7M  1 loop /snap/core/7396
+  loop1         7:1    0   18M  1 loop /snap/amazon-ssm-agent/1455
+  nvme1n1     259:0    0   40G  0 disk
+  └─nvme1n1p1 259:1    0   40G  0 part /
+  nvme0n1     259:2    0   41G  0 disk
+  root@ip-172-31-2-88:~# sudo file -s /dev/nvme0n1
+  /dev/nvme0n1: data
+  ```
+  Okay, so the `/dev/nvme0n1` contains no files system, and not mounted.  Let's fix this ;
+  - Create file-system :
+  ```bash
+  sudo mkfs -t xfs /dev/nvme0n1
+  meta-data=/dev/nvme0n1           isize=512    agcount=4, agsize=2686976 blks
+          =                       sectsz=512   attr=2, projid32bit=1
+          =                       crc=1        finobt=1, sparse=0, rmapbt=0, reflink=0
+  data     =                       bsize=4096   blocks=10747904, imaxpct=25
+          =                       sunit=0      swidth=0 blks
+  naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+  log      =internal log           bsize=4096   blocks=5248, version=2
+          =                       sectsz=512   sunit=0 blks, lazy-count=1
+  realtime =none                   extsz=4096   blocks=0, rtextents=0
+  ```
+  - Create mount-point :
+  ```bash
+  sudo mkdir /tfe-data
+  ```
+  - Find out UUID of the block device *( Ubuntu 18.04+ speciifc) :
+  ```bash
+  lsblk /dev/nvme0n1 -o +UUID
+  NAME    MAJ:MIN RM SIZE RO TYPE MOUNTPOINT UUID
+  nvme0n1 259:2    0  41G  0 disk            f144a81f-144c-4975-9701-6c9d0692a4a9
+  ```
+  - Modify fstab (with making backup copy)
+  ```bash
+  cp /etc/fstab /etc/fstab.original
+  ```
+  add to /etc/fstab line : 
+  ```bash  
+  UUID=f144a81f-144c-4975-9701-6c9d0692a4a9  /tfe-data  xfs  defaults,nofail  0  2
+  ```
+  > Note : If you ever boot your instance without this volume attached (for example, after moving the volume to another instance), the nofail mount option enables the instance to boot even if there are errors mounting the volume.
+  
 
 # Run-log 
 
@@ -234,6 +317,15 @@ total 272
 ```
 OKay we have certs and keys
 
+## Changes for install
+- Pumped up instance to m5.large
+- Modified AWS Security Group to allow traffic on 8800 port
+- apparently root volume should have at least 10G total disk space :-( for Docker
+.. and 40G for the main APP even if we using Prod MOunt Disk mode 
+- Total space requirement met for directory /
+  - Directory must have at least 10G total space
+- Total space requirement met for directory /var/lib/docker
+  - Directory must have at least 40G total space
 
 
 # TODO
