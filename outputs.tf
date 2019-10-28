@@ -18,3 +18,13 @@ output "cert_issuer_pem" {
 output "cert_bundle" {
   value = "${module.sslcert_letsencrypt.cert_bundle}"
 }
+
+# 
+
+output "public_ip" {
+  value = "${aws_instance.ptfe.public_ip}"
+}
+
+output "public_dns" {
+  value = "${aws_instance.ptfe.public_dns}"
+}

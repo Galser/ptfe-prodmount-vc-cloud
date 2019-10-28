@@ -113,12 +113,48 @@ MIIFajCCBFKgAwIBAgISA1pe0gKgmrT5JqTZmuUPm9+1MA0GCSqGSIb3DQEBCwUA
 MEoxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MSMwIQYDVQQD
 ```
 
+## Instance/EBS
+
+- Added code : 
+```terraform
+```
+- Apply : 
+```bash
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_a_record: Modifying... [id=266392926]
+aws_instance.ptfe: Destroying... [id=i-0c18602c552c592b5]
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_a_record: Still modifying... [id=266392926, 10s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0c18602c552c592b5, 10s elapsed]
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_a_record: Still modifying... [id=266392926, 20s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0c18602c552c592b5, 20s elapsed]
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_a_record: Modifications complete after 23s [id=266392926]
+aws_instance.ptfe: Still destroying... [id=i-0c18602c552c592b5, 30s elapsed]
+aws_instance.ptfe: Destruction complete after 30s
+aws_instance.ptfe: Creating...
+aws_instance.ptfe: Still creating... [10s elapsed]
+aws_instance.ptfe: Still creating... [20s elapsed]
+aws_instance.ptfe: Still creating... [30s elapsed]
+aws_instance.ptfe: Provisioning with 'remote-exec'...
+...
+aws_instance.ptfe (remote-exec): 0 upgraded, 0 newly installed, 0 to remove and 16 not upgraded.
+aws_instance.ptfe: Creation complete after 58s [id=i-0c77aab60aee2a3ca]
+
+Apply complete! Resources: 1 added, 1 changed, 1 destroyed.
+
+Outputs:
+
+cert_bundle = -----BEGIN CERTIFICATE-----
+MIIFajCCBFKgAwIBAgISA1pe0gKgmrT5JqTZmuUPm9+1MA0GCSqGSIb3DQEBCwUA
+...
+cert_url = https://acme-v02.api.letsencrypt.org/acme/cert/asasdasdasdsad
+public_dns = ec2-18-194-53-88.eu-central-1.compute.amazonaws.com
+public_ip = 18.194.53.88
+```
 
 # TODO
 - [ ] create code for instance deploys and EBS creation
   - [x] DNS module
-  - [ ] create SSL keys/cert module
-  - [ ] instance module ( including EBS)
+  - [x] create SSL keys/cert module
+  - [x] instance module/code ( including EBS)
   - [ ] main code
 - [ ] install TFE in Prod mode, write down steps
 - [ ] create instruction block
