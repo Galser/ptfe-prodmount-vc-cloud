@@ -1,3 +1,4 @@
 .terraform
 terraform.tfstate
 terraform.tfstate*
+site_ssl_private_key.pem

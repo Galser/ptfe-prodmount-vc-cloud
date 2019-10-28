@@ -117,6 +117,50 @@ MEoxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MSMwIQYDVQQD
 
 - Added code : 
 ```terraform
+resource "aws_key_pair" "ptfe-key" {
+  key_name   = "ptfe-key"
+  public_key = "${file("~/.ssh/id_rsa.pub")}"
+}
+
+
+resource "aws_instance" "ptfe" {
+  ami                    = var.amis[var.region]
+  instance_type          = "${var.instance_type}"
+  subnet_id              = var.subnet_ids[var.region]
+  vpc_security_group_ids = [var.vpc_security_group_ids[var.region]]
+  key_name               = "${aws_key_pair.ptfe-key.id}"
+
+  ebs_block_device {
+    device_name = "/dev/sdg"
+    volume_size = 41
+    delete_on_termination = false
+  }
+
+  tags = {
+    "Name"      = "ptfe-prodmount-andrii",
+    "andriitag" = "true",
+    "learntag"  = "${var.learntag}"
+  }
+
+  volume_tags = {
+    "Name" = "ptfe-prodmount-andrii",
+    "andriitag" = "true",
+  }
+
+  connection {
+    user        = "ubuntu"
+    type        = "ssh"
+    private_key = "${file("~/.ssh/id_rsa")}"
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt update -y",
+      "sudo apt install -y curl wget",
+    ]
+  }
+}
 ```
 - Apply : 
 ```bash
@@ -150,12 +194,49 @@ public_dns = ec2-18-194-53-88.eu-central-1.compute.amazonaws.com
 public_ip = 18.194.53.88
 ```
 
+## Main code
+
+- The one thing that is left - is to save Certfificate and Private Key locally. but, to exclude private key from Git repo 
+- Added code : 
+```terraform
+# to make life easier when installing
+resource "local_file" "ssl_private_key_file" {
+  sensitive_content           = "${module.sslcert_letsencrypt.cert_private_key_pem}"
+  filename          = "./site_ssl_private_key.pem"
+}
+
+resource "local_file" "ssl_cert_file" {
+  sensitive_content           = "${module.sslcert_letsencrypt.cert_pem}"
+  filename          = "./site_ssl_cert.pem"
+}
+
+resource "local_file" "ssl_cert_bundle_file" {
+  sensitive_content           = "${module.sslcert_letsencrypt.cert_bundle}"
+  filename          = "./site_ssl_cert_bundle.pem"
+}
+```
+- Modified [.gitgnore](.gitgnore) : 
+```
+.terraform
+terraform.tfstate
+terraform.tfstate*
+site_ssl_private_key.pem
+```
+- Applied code, let's  check :
+```bash
+../ptfe-prodmount-vc-cloud # ls -la
+total 272
+...
+-rwxr-xr-x   1 andrii  staff   1939 Oct 28 15:38 site_ssl_cert.pem
+-rwxr-xr-x   1 andrii  staff   3589 Oct 28 15:38 site_ssl_cert_bundle.pem
+-rwxr-xr-x   1 andrii  staff   1675 Oct 28 15:38 site_ssl_private_key.pem
+...
+```
+OKay we have certs and keys
+
+
+
 # TODO
-- [ ] create code for instance deploys and EBS creation
-  - [x] DNS module
-  - [x] create SSL keys/cert module
-  - [x] instance module/code ( including EBS)
-  - [ ] main code
 - [ ] install TFE in Prod mode, write down steps
 - [ ] create instruction block
 - [ ] test instructions
@@ -163,6 +244,11 @@ public_ip = 18.194.53.88
 
 # DONE
 - [x] define objectives 
+- [x] create code for instance deploys and EBS creation
+  - [x] DNS module
+  - [x] create SSL keys/cert module
+  - [x] instance module/code ( including EBS)
+  - [x] main code
 
 # Notes 
 
