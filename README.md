@@ -99,7 +99,21 @@ To continue the installation, visit the following URL in your browser:
   UUID=f144a81f-144c-4975-9701-6c9d0692a4a9  /tfe-data  xfs  defaults,nofail  0  2
   ```
   > Note : If you ever boot your instance without this volume attached (for example, after moving the volume to another instance), the nofail mount option enables the instance to boot even if there are errors mounting the volume.
-  
+  - Mount it (using `/etc/fstab` ): 
+  ```bash
+  mount -a
+  ```
+  - Let's check : 
+  ```bash
+  NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+  loop0         7:0    0 88.7M  1 loop /snap/core/7396
+  loop1         7:1    0   18M  1 loop /snap/amazon-ssm-agent/1455
+  nvme1n1     259:0    0   40G  0 disk
+  └─nvme1n1p1 259:1    0   40G  0 part /
+  nvme0n1     259:2    0   41G  0 disk /tfe-data  
+  ```
+  - And we provide that path to installation 
+  - Save settings, ..TFE starting
 
 # Run-log 
 
@@ -317,6 +331,115 @@ total 272
 ```
 OKay we have certs and keys
 
+## Test
+- Create PTFE User Token and add it into config `~/.terraformrc` : 
+```terraform
+credentials "ptfe-pm-1.guselietov.com" {
+  token = "j.........tM" # <-- your token here >
+}
+```
+- Cd to `tf-test` 
+- There is code, pre-populated in there for test : 
+```terraform
+terraform {
+  backend "remote" {
+    hostname     = "ptfe-pm-1.guselietov.com"
+    organization = "acme"
+
+    workspaces {
+      name = "playground"
+    }
+  }
+}
+
+resource "null_resource" "helloPTFE" {
+  provisioner "local-exec" {
+    command = "echo hello world in PTFE"
+  }
+}
+```
+- Init :
+```bash
+terraform init
+
+Initializing the backend...
+
+Successfully configured the backend "remote"! Terraform will automatically
+use this backend unless the backend configuration changes.
+
+Initializing provider plugins...
+- Checking for available provider plugins...
+- Downloading plugin for provider "null" (hashicorp/null) 2.1.2...
+
+The following providers do not have any version constraints in configuration,
+so the latest version was installed.
+
+To prevent automatic upgrades to new major versions that may contain breaking
+changes, it is recommended to add version = "..." constraints to the
+corresponding provider blocks in configuration, with the constraint strings
+suggested below.
+
+* provider.null: version = "~> 2.1"
+
+Terraform has been successfully initialized!
+
+```
+- Terraform apply :
+```bash
+terraform apply
+Running apply in the remote backend. Output will stream here. Pressing Ctrl-C
+will cancel the remote apply if it's still pending. If the apply started it
+will stop streaming the logs, but will not stop the apply running remotely.
+
+Preparing the remote apply...
+
+To view this run in a browser, visit:
+https://ptfe-pm-1.guselietov.com/app/acme/playground/runs/run-nm8qhb6uRY5D7Qr3
+
+Waiting for the plan to start...
+
+Terraform v0.12.2
+
+Configuring remote state backend...
+Initializing Terraform configuration...
+2019/10/29 08:18:40 [DEBUG] Using modified User-Agent: Terraform/0.12.2 TFE/ad6f6a1d83
+Refreshing Terraform state in-memory prior to plan...
+The refreshed state will be used to calculate this plan, but will not be
+persisted to local or remote state storage.
+
+
+------------------------------------------------------------------------
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # null_resource.helloPTFE will be created
+  + resource "null_resource" "helloPTFE" {
+      + id = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions in workspace "playground"?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+2019/10/29 08:18:56 [DEBUG] Using modified User-Agent: Terraform/0.12.2 TFE/ad6f6a1d83
+null_resource.helloPTFE: Creating...
+null_resource.helloPTFE: Provisioning with 'local-exec'...
+null_resource.helloPTFE (local-exec): Executing: ["/bin/sh" "-c" "echo hello world in PTFE"]
+null_resource.helloPTFE (local-exec): hello world in PTFE
+null_resource.helloPTFE: Creation complete after 0s [id=8447053125194314224]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+```
+Success!
+
 ## Changes for install
 - Pumped up instance to m5.large
 - Modified AWS Security Group to allow traffic on 8800 port
@@ -329,9 +452,9 @@ OKay we have certs and keys
 
 
 # TODO
-- [ ] install TFE in Prod mode, write down steps
+- [ ] add VPC and security group creation
 - [ ] create instruction block
-- [ ] test instructions
+- [ ] redeploy PTFE to test instructions
 - [ ] update README
 
 # DONE
@@ -341,6 +464,8 @@ OKay we have certs and keys
   - [x] create SSL keys/cert module
   - [x] instance module/code ( including EBS)
   - [x] main code
+- [x] install TFE in Prod mode, write down steps
+
 
 # Notes 
 
