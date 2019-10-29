@@ -13,22 +13,14 @@ module "sslcert_letsencrypt" {
   domain = var.site_domain
 }
 
-# to make life easier when installing
-resource "local_file" "ssl_private_key_file" {
-  sensitive_content           = "${module.sslcert_letsencrypt.cert_private_key_pem}"
-  filename          = "./site_ssl_private_key.pem"
-}
+module "vpc_aws" {
+  source = "./modules/vpc_aws"
 
-resource "local_file" "ssl_cert_file" {
-  sensitive_content           = "${module.sslcert_letsencrypt.cert_pem}"
-  filename          = "./site_ssl_cert.pem"
-}
+  region   = var.region
+  availabilityZone = var.availabilityZone
+  tag = var.vpc_tag
 
-resource "local_file" "ssl_cert_bundle_file" {
-  sensitive_content           = "${module.sslcert_letsencrypt.cert_bundle}"
-  filename          = "./site_ssl_cert_bundle.pem"
 }
-
 
 resource "aws_key_pair" "ptfe-key" {
   key_name   = "ptfe-key"
@@ -39,8 +31,8 @@ resource "aws_key_pair" "ptfe-key" {
 resource "aws_instance" "ptfe" {
   ami                    = var.amis[var.region]
   instance_type          = "${var.instance_type}"
-  subnet_id              = var.subnet_ids[var.region]
-  vpc_security_group_ids = [var.vpc_security_group_ids[var.region]]
+  subnet_id              = "${module.vpc_aws.subnet_id}"
+  vpc_security_group_ids = ["${module.vpc_aws.security_group_id}"]
   key_name               = "${aws_key_pair.ptfe-key.id}"
 
    root_block_device {

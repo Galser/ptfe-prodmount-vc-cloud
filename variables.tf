@@ -10,6 +10,14 @@ variable "region" {
   default = "eu-central-1"
 }
 
+variable "availabilityZone" {
+  default = "eu-central-1a"
+}
+
+variable "vpc_tag" {
+  default = "ag_ptfe_pm"
+} 
+
 variable "subnet_ids" {
   type = "map"
   default = {
@@ -41,3 +49,4 @@ variable "learntag" {
   type    = "string"
   default = "200tf"
 }
+

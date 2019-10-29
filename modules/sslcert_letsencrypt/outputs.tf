@@ -19,9 +19,5 @@ output "cert_issuer_pem" {
 
 output "cert_bundle" {
  description = "Full certificate bundle, for example for installing in the system that does not recognize Let'sEncrypt"
- value = <<EOT
-${acme_certificate.certificate.certificate_pem}
-
-${acme_certificate.certificate.issuer_pem}
-    EOT 
+ value = "${local.cert_bundle}"
 }
