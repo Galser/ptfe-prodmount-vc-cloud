@@ -49,25 +49,25 @@ resource "aws_security_group" "ag_tfe_Security_Group" {
   }
   # allow egress ephemeral ports
   egress {
-    protocol   = "tcp"
+    protocol    = "tcp"
     cidr_blocks = ["${var.destinationCIDRblock}"]
-    from_port  = 1024
-    to_port    = 65535
+    from_port   = 1024
+    to_port     = 65535
   }
   # allow egress 80 // some Ubuntu libtool
   # still coming opver HTTP, not https
   egress {
-    protocol   = "tcp"
+    protocol    = "tcp"
     cidr_blocks = ["${var.destinationCIDRblock}"]
-    from_port  = 80
-    to_port    = 80
+    from_port   = 80
+    to_port     = 80
   }
   # allow egress 443
   egress {
-    protocol   = "tcp"
+    protocol    = "tcp"
     cidr_blocks = ["${var.destinationCIDRblock}"]
-    from_port  = 443
-    to_port    = 443
+    from_port   = 443
+    to_port     = 443
   }
 
   tags = {
@@ -77,7 +77,7 @@ resource "aws_security_group" "ag_tfe_Security_Group" {
 
 
 resource "aws_security_group" "ag_tfe_Security_Group_elb" {
-  name = "${var.tag}-sg-elb"
+  name        = "${var.tag}-sg-elb"
   vpc_id      = "${aws_vpc.ag_tfe.id}"
   description = "${var.tag} ELB Security Group"
   # Allow all outbound

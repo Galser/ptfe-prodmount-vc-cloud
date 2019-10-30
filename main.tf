@@ -5,9 +5,10 @@ data "aws_availability_zones" "all" {}
 module "dns_godaddy" {
   source = "./modules/dns_godaddy"
 
-  host      = var.site_record
-  domain    = var.site_domain
-  record_ip = "${aws_instance.ptfe.public_ip}"
+  host         = var.site_record
+  domain       = var.site_domain
+  cname_target = aws_elb.ptfe_lb.dns_name
+  record_ip    = "${aws_instance.ptfe.public_ip}"
 }
 
 module "sslcert_letsencrypt" {
@@ -72,14 +73,14 @@ resource "aws_instance" "ptfe" {
   provisioner "remote-exec" {
     script = "scripts/provision.sh"
   }
-  
+
 }
 
 # Load-Balancer  
 resource "aws_elb" "ptfe_lb" {
   name = "ag-tfe-clb"
 
-  security_groups    = ["${module.vpc_aws.elb_security_group_id}"]
+  security_groups = ["${module.vpc_aws.elb_security_group_id}"]
   #availability_zones = data.aws_availability_zones.all.names
   subnets = ["${module.vpc_aws.subnet_id}"]
   #health_check {
