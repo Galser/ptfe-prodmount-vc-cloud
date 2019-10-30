@@ -16,18 +16,18 @@ To learn more about the mentioned above tools and technologies -  please check s
 # How-to
 
 ## Build infrastructure
-- You will need to have SSH key in RSA format available at the default location :
+- Beforehand you will need to have SSH key in RSA format available at the default location :
   - `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub`
-  This key is going to be used later to connect to the instance where TFE will be running.
+  > This key is going to be used later to connect to the instance where TFE will be running.
   
-- Prepare AWS auth credentials (You can create security credentials on [this page](https://console.aws.amazon.com/iam/home?#security_credential).) via env variables, execute in the command line :
+- Prepare AWS auth credentials (You can create security credentials on [this page](https://console.aws.amazon.com/iam/home?#security_credential).) To export them via env variables, execute in the command line :
     ```
     export AWS_ACCESS_KEY_ID="YOUR ACCESS KEY"
     export AWS_SECRET_ACCESS_KEY="YOUR SECRET KEY"
     ```
 - Prepare GoDaddy authentication for your domain DNS management - register and export as env variables GoDaddy API keys.
     - Use this link : https://developer.godaddy.com/keys/ ( pay attention that you are creating API key in **production** area)
-    - Export them via :
+    - Export them by executing :
     ```bash
     export GODADDY_API_KEY=MY_KEY
     export GODADDY_API_SECRET=MY_SECRET
@@ -67,6 +67,8 @@ loadbalancer_fqdn = ag-tfe-clb-493767462.eu-central-1.elb.amazonaws.com
 public_dns = ec2-18-184-220-142.eu-central-1.compute.amazonaws.com
 public_ip = 18.184.220.142
 ```
+  > One caveat. Sometimes DNS server of GoDaddy (usually second half of the day, maybe due to load) not replying fast enough to Let'sEcnrypt. There is no implmented automated solution for the problem in the current project, so, in case you htiing the time out with challenge/response for SSL certfiicate creation, just run terraform apply once more. 
+  
 - Please note that the successfull `apply` should create 3 files with SSL certificate information in local folder : 
 ```bash
 # ls -l site*
