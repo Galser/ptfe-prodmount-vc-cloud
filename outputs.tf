@@ -32,3 +32,8 @@ output "public_dns" {
 output "full_site_name" {
   value = "${var.site_record}.${var.site_domain}"
 }
+
+output "clb_dns_name" {
+  value       = aws_elb.ptfe_lb.dns_name
+  description = "The domain name of the load balancer"
+}

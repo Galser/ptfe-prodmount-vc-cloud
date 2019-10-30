@@ -16,7 +16,7 @@ variable "availabilityZone" {
 
 variable "vpc_tag" {
   default = "ag_ptfe_pm"
-} 
+}
 
 variable "subnet_ids" {
   type = "map"
