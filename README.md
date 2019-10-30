@@ -333,11 +333,8 @@ To make main README less obscure notes been extracted into a separate file : [no
 1. **To download the content of this repository** you will need **git command-line tools**(recommended) or **Git UI Client**. To install official command-line Git tools please [find here instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for various operating systems. 
 
 2. **For managing infrastructure** we using Terraform - open-source infrastructure as a code software tool created by HashiCorp. It enables users to define and provision a data center infrastructure using a high-level configuration language known as Hashicorp Configuration Language, or optionally JSON. More you encouraged to [learn here](https://www.terraform.io).
-
-  More specifically we going to use Terraform for creationg infrastructre, adn install Terraform Enterprise.
-  TFE Overview: https://www.terraform.io/docs/enterprise/index.html
-
-  Pre-Install checklist: https://www.terraform.io/docs/enterprise/before-installing/index.html
+    - Specifically we going to use Terraform for creationg infrastructre, and install Terraform Enterprise. TFE Overview: can be found her : https://www.terraform.io/docs/enterprise/index.html
+    - Pre-Install checklist: https://www.terraform.io/docs/enterprise/before-installing/index.html
 
 3. **This project for virtualization** uses **AWS EC2** - Amazon Elastic Compute Cloud (Amazon EC2 for short) - a web service that provides secure, resizable compute capacity in the cloud. It is designed to make web-scale cloud computing easier for developers. You can read in details and create a free try-out account if you don't have one here :  [Amazon EC2 main page](https://aws.amazon.com/ec2/) 
 
