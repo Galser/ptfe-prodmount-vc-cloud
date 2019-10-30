@@ -25,8 +25,8 @@ To learn more about the mentioned above tools and technologies -  please check s
     export AWS_ACCESS_KEY_ID="YOUR ACCESS KEY"
     export AWS_SECRET_ACCESS_KEY="YOUR SECRET KEY"
     ```
-- Prepare GoDaddy authentication for your domain DSN management - register and export as env variables GoDaddy API keys.
-    - Use this link : https://developer.godaddy.com/keys/ ( pay attention that you are creating API KEY IN **production** area)
+- Prepare GoDaddy authentication for your domain DNS management - register and export as env variables GoDaddy API keys.
+    - Use this link : https://developer.godaddy.com/keys/ ( pay attention that you are creating API key in **production** area)
     - Export them via :
     ```bash
     export GODADDY_API_KEY=MY_KEY
@@ -68,13 +68,13 @@ public_dns = ec2-18-184-220-142.eu-central-1.compute.amazonaws.com
 public_ip = 18.184.220.142
 ```
 - Please note that the successfull `apply` should create 3 files with SSL certificate information in local folder : 
-  ```bash
-  # ls -l site*
-  -rwxr-xr-x  1 andrii  staff  1939 Oct 29 11:54 site_ssl_cert.pem
-  -rwxr-xr-x  1 andrii  staff  3589 Oct 29 11:54 site_ssl_cert_bundle.pem
-  -rwxr-xr-x  1 andrii  staff  1675 Oct 29 11:54 site_ssl_private_key.pem
-  ```
-  We are going to use them later. 
+```bash
+# ls -l site*
+-rwxr-xr-x  1 andrii  staff  1939 Oct 29 11:54 site_ssl_cert.pem
+-rwxr-xr-x  1 andrii  staff  3589 Oct 29 11:54 site_ssl_cert_bundle.pem
+-rwxr-xr-x  1 andrii  staff  1675 Oct 29 11:54 site_ssl_private_key.pem
+```
+We are going to use them later. 
 
 ## Terminal-based portion of TFE installation
 - Connect to VM : 
@@ -124,7 +124,7 @@ ssh ubuntu@18.184.220.142
     - Choose File for Private Key ( point to `site_ssl_private_key.pem` in the current folder)
     - Choose File for Certificate ( point to `site_ssl_cert.pem` in the current folder)
     - and press green button **[Upload & Continue]**
-- Now you will need to present your license file. Usually, it comes in a special tar-ball package with extension RLI. Press **[Choose license] **, Locate the file and upload.
+- Now you will need to present your license file. Usually, it comes in a special tar-ball package with extension RLI. Press **[Choose license]**, Locate the file and upload.
 ![Add license form](screenshots/2_add_license.png)
     > And you can also see - that you've been automatically redirected to the new URL: `https://ptfe-pm-1.guselietov.com:8800/`
     > and that the "lock" icon next to the FQDN of the site in the URL bar is closed, meaning that certificate recognized as valid by the browser and corresponds to the address of the site.
@@ -134,15 +134,15 @@ And press **[Continue]** button
 - On the next step, you will need to enter the password, that can be used in the future to access THIS, Admin Console :
 ![Secure Admin COnsole](screenshots/3_1_secure_admin_console.png)
 Enter the desired password, and press continue
-- Now you will see the "Preflight Checks" when all the main requirements for the PTFE installation checked and presented to you the top of the screen looks like :
-![Preflight checks](screenshots/3_2_prefilght_checks.png)
+- Now you will see the "Preflight Checks" when all the main requirements for the PTFE installation checked and the one that passed marked with green check mark. They ALL should be green to pass.
 Once more, press **[Continue]** button
 - The next screen presents all your settings in one place
     - Check that host FQDN is correct
     - Scroll down to the *Installation Type* section and select **[Production]**
     - Now in the next section *Production Type* select **[Mounted Disk]**
     - Below it, in the *Mounted Disk Configuration* enter path : `/tfe-data`
-    Check the screenshopt for guidance : 
+    
+    Consult the screenshop for guidance : 
     
     ![Prod Settings](screenshots/3_3_settings_prod.png)
     
@@ -151,7 +151,7 @@ Once more, press **[Continue]** button
     After that - press **[Save]** button at the bottom of the page to save all your settings. And you going to be present with the following informational screen :
 ![Settings saved, restart now](screenshots/4_restat_now.png)
  Press **[Restart Now]**
-- At his moment PTFE will do a full start of all internal services, it can take a couple of minutes, refresh the windows from time to time :
+- At this moment PTFE will do a full start of all internal services, it can take a couple of minutes, refresh the windows from time to time :
 ![Starting dashboard](screenshots/5_starting.png)
   > Note:..Depending on your browser and/or browser settings the starting in the left part of Dashboard - never changes unless you reload the page. So force-reload the page after 2-3 minutes.
 - Wait a couple of minutes for the state at the left rectangle to be changed to **Started**. Now, below the button [Stop now] there is link **[Open]** :
@@ -160,7 +160,9 @@ Once more, press **[Continue]** button
 
     Open it, this will lead you to the first-time setup of the admin user :
 - Set up your admin user :
+
     ![Setup admin user](screenshots/7_admin_setup.png)
+    
     Fill in the form and press **[Create an account]**
 - Now you are logged in the brand fresh Private Terraform Enterprise. Congratulations. You can check the next section on how to test it.
 
@@ -169,7 +171,7 @@ Once more, press **[Continue]** button
 
 To test our fresh PTFE instance, we are going to create an organization. workspace within that organization, some TF code and execute that code in that workspace as in the remote backend.
 
-- We need first to create an **organization** (Organizations are a shared space for teams to collaborate on workspaces in PTFE). Login into PTFE. Choose from the dashboard "Create new organization" (also available in the top-left user menu) :
+- We need first to create an **organization** (Organizations are a shared space for teams to collaborate on workspaces in PTFE). Login into PTFE. Choose from the dashboard "Create new organization" (also available in the top-left menu) :
     ![Create organization](screenshots/8_before_create_org.png)
 
     For this example, we are going to use **"acme"** :
@@ -332,10 +334,10 @@ To make main README less obscure notes been extracted into a separate file : [no
 
 2. **For managing infrastructure** we using Terraform - open-source infrastructure as a code software tool created by HashiCorp. It enables users to define and provision a data center infrastructure using a high-level configuration language known as Hashicorp Configuration Language, or optionally JSON. More you encouraged to [learn here](https://www.terraform.io).
 
-More specifically we going to use Terraform Enterprise 
-TFE Overview: https://www.terraform.io/docs/enterprise/index.html
+  More specifically we going to use Terraform for creationg infrastructre, adn install Terraform Enterprise.
+  TFE Overview: https://www.terraform.io/docs/enterprise/index.html
 
-Pre-Install checklist: https://www.terraform.io/docs/enterprise/before-installing/index.html
+  Pre-Install checklist: https://www.terraform.io/docs/enterprise/before-installing/index.html
 
 3. **This project for virtualization** uses **AWS EC2** - Amazon Elastic Compute Cloud (Amazon EC2 for short) - a web service that provides secure, resizable compute capacity in the cloud. It is designed to make web-scale cloud computing easier for developers. You can read in details and create a free try-out account if you don't have one here :  [Amazon EC2 main page](https://aws.amazon.com/ec2/) 
 
