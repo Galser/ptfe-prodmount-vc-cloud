@@ -1,7 +1,13 @@
-# data
-data "aws_availability_zones" "all" {}
+# Network : AWS VPC
+module "vpc_aws" {
+  source = "./modules/vpc_aws"
 
-# modules
+  region           = var.region
+  availabilityZone = var.availabilityZone
+  tag              = var.vpc_tag
+}
+
+# Network : DNS GoDaddy
 module "dns_godaddy" {
   source = "./modules/dns_godaddy"
 
@@ -11,6 +17,7 @@ module "dns_godaddy" {
   record_ip    = "${aws_instance.ptfe.public_ip}"
 }
 
+# Certificate : SSL from Let'sEncrypt
 module "sslcert_letsencrypt" {
   source = "./modules/sslcert_letsencrypt"
 
@@ -18,22 +25,15 @@ module "sslcert_letsencrypt" {
   domain = var.site_domain
 }
 
-module "vpc_aws" {
-  source = "./modules/vpc_aws"
+# Instance  
 
-  region           = var.region
-  availabilityZone = var.availabilityZone
-  tag              = var.vpc_tag
-
-}
-
+# SSH key fpor provision
 resource "aws_key_pair" "ptfe-key" {
   key_name   = "ptfe-key"
   public_key = "${file("~/.ssh/id_rsa.pub")}"
 }
 
-# Instance 
-
+# Instance
 resource "aws_instance" "ptfe" {
   ami                    = var.amis[var.region]
   instance_type          = "${var.instance_type}"
@@ -76,21 +76,22 @@ resource "aws_instance" "ptfe" {
 
 }
 
-# Load-Balancer  
+# Load-Balancer, AWS ELB classic  as we terminate SSL
+# on instance and no need for new features of ALB
 resource "aws_elb" "ptfe_lb" {
   name = "ag-tfe-clb"
 
   security_groups = ["${module.vpc_aws.elb_security_group_id}"]
-  #availability_zones = data.aws_availability_zones.all.names
-  subnets = ["${module.vpc_aws.subnet_id}"]
-  #health_check {
-  #  target              = "HTTP:${var.server_port}/"
-  #  interval            = 30
-  #  timeout             = 3
-  #  healthy_threshold   = 2
-  #  unhealthy_threshold = 2
-  #}
-  # This adds a listener for incoming HTTPS requests.
+  subnets         = ["${module.vpc_aws.subnet_id}"]
+
+  health_check {
+    healthy_threshold   = 10
+    unhealthy_threshold = 3
+    timeout             = 15
+    target              = "TCP:8800"
+    interval            = 30
+  }
+
   listener {
     lb_port           = "443"
     lb_protocol       = "tcp"
