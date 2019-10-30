@@ -67,7 +67,7 @@ loadbalancer_fqdn = ag-tfe-clb-493767462.eu-central-1.elb.amazonaws.com
 public_dns = ec2-18-184-220-142.eu-central-1.compute.amazonaws.com
 public_ip = 18.184.220.142
 ```
-  > One caveat. Sometimes DNS server of GoDaddy (usually second half of the day, maybe due to load) not replying fast enough to Let'sEcnrypt. There is no implmented automated solution for the problem in the current project, so, in case you htiing the time out with challenge/response for SSL certfiicate creation, just run terraform apply once more. 
+  > One caveat. Sometimes DNS server of GoDaddy (usually the second half of the day, maybe due to load) not replying fast enough to Let'sEcnrypt. There is no implemented automated solution for the problem in the current project, so, in case you hitting the time out with challenge/response for SSL certificate creation, just run terraform apply once more. 
   
 - Please note that the successfull `apply` should create 3 files with SSL certificate information in local folder : 
 ```bash
@@ -122,7 +122,7 @@ ssh ubuntu@18.184.220.142
 - Now you will be presented with settings screen :
 ![Installation certificate request](screenshots/1_install_cert_question.png)
     Where you will need to
-    - enter hostname: `ptfe-pm-1.guselietov.com` *( this used in exaxmple,. you may have another one, if you modified settings earlier)*
+    - enter hostname: `ptfe-pm-1.guselietov.com` *( this used in the example, you may have another one if you modified settings earlier)*
     - Choose File for Private Key ( point to `site_ssl_private_key.pem` in the current folder)
     - Choose File for Certificate ( point to `site_ssl_cert.pem` in the current folder)
     - and press green button **[Upload & Continue]**
@@ -136,7 +136,7 @@ And press **[Continue]** button
 - On the next step, you will need to enter the password, that can be used in the future to access THIS, Admin Console :
 ![Secure Admin COnsole](screenshots/3_1_secure_admin_console.png)
 Enter the desired password, and press continue
-- Now you will see the "Preflight Checks" when all the main requirements for the PTFE installation checked and the one that passed marked with green check mark. They ALL should be green to pass.
+- Now you will see the "Preflight Checks" when all the main requirements for the PTFE installation checked and the one that passed marked with a green checkmark. They ALL should be green to pass.
 Once more, press **[Continue]** button
 - The next screen presents all your settings in one place
     - Check that host FQDN is correct
@@ -335,7 +335,7 @@ To make main README less obscure notes been extracted into a separate file : [no
 1. **To download the content of this repository** you will need **git command-line tools**(recommended) or **Git UI Client**. To install official command-line Git tools please [find here instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for various operating systems. 
 
 2. **For managing infrastructure** we using Terraform - open-source infrastructure as a code software tool created by HashiCorp. It enables users to define and provision a data center infrastructure using a high-level configuration language known as Hashicorp Configuration Language, or optionally JSON. More you encouraged to [learn here](https://www.terraform.io).
-    - Specifically we going to use Terraform for creationg infrastructre, and install Terraform Enterprise. TFE Overview: can be found her : https://www.terraform.io/docs/enterprise/index.html
+    - Specifically, we going to use Terraform for creating infrastructure, and install Terraform Enterprise. TFE Overview: can be found here: https://www.terraform.io/docs/enterprise/index.html
     - Pre-Install checklist: https://www.terraform.io/docs/enterprise/before-installing/index.html
 
 3. **This project for virtualization** uses **AWS EC2** - Amazon Elastic Compute Cloud (Amazon EC2 for short) - a web service that provides secure, resizable compute capacity in the cloud. It is designed to make web-scale cloud computing easier for developers. You can read in details and create a free try-out account if you don't have one here :  [Amazon EC2 main page](https://aws.amazon.com/ec2/) 
