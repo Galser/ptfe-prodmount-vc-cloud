@@ -29,43 +29,22 @@ See [installation](#installation) section below  for more details
 - **mapPublicIP** - default = true
 
 ## Outputs
-- **cert_pem** - *strng* - PEM-encoded Certificate
-- **cert_private_key_pem** - *strng* - PEM-encoded private key
-- **cert_url** - *strng* - Full certificate URL on  ACEM Let'sEncryt site 
-- **cert_issuer_pem** - *strng* - PEM-encoded Issuer Cert
-- **cert_bundle** - *strng* - PEM-Encoded bundle
+
+- **subnet_id" - *string* - AWS subnet ID
+
+- **security_group_id" - *string* - AWS security group for the main instance 
+  ( SSH access enabled )
+
+- **elb_security_group_id" - *string* - AWS load-balancer security group ID, only
+SSL ports for main TFE access opened (443) and for dashboard ( 8800 )
+
 
 # Installation
 
-- Install GoDaddy plugin :  https://github.com/n3integration/terraform-godaddy
-    - Run :
-    ```bash
-    bash <(curl -s https://raw.githubusercontent.com/n3integration/terraform-godaddy/master/install.sh)
-    ```
-    - This is going to create plugin binary in `~/.terraform/plugins` , while the recommended path should be `~/.terraform.d/plugins/`, and the name should be in a proper format pattern . let's move and rename it :
-    ```bash
-    mv ~/.terraform/plugins/terraform-godaddy ~/.terraform.d/plugins/terraform-provider-godaddy
-    ```
-- Register and export as env variables GoDaddy API keys.
-    - Use this link : https://developer.godaddy.com/keys/ ( pay attention that you are creating API KEY IN **production** area)
-    - Export them via :
-    ```bash
-    export GODADDY_API_KEY=MY_KEY
-    export GODADDY_API_SECRET=MY_SECRET
-    ```
-- GoDaddy provider init : 
+- AWS provider example config: 
 ```terraform
-provider "godaddy" {}
-```
-- ACME provider init example : 
-```terraform
-remote:      https://github.com/Galser/ptfe-prodmount-vc-cloud/pull/new/f-dns-module
-provider "acme" {
-  # PRODUCTION
-  version    = "~> 1.0"
-  server_url = "https://acme-v02.api.letsencrypt.org/directory"
-  # STAGING
-  # "https://acme-staging-v02.api.letsencrypt.org/directory"
+provider "aws" {
+  profile = "default"
+  region  = YOUR_REGION
 }
 ```
-

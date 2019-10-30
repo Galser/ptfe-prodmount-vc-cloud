@@ -18,6 +18,6 @@ output "cert_issuer_pem" {
 }
 
 output "cert_bundle" {
- description = "Full certificate bundle, for example for installing in the system that does not recognize Let'sEncrypt"
- value = "${local.cert_bundle}"
+  description = "Full certificate bundle, for example for installing in the system that does not recognize Let'sEncrypt"
+  value       = "${local.cert_bundle}"
 }

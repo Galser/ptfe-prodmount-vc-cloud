@@ -20,7 +20,27 @@ You also will need to prepare valid SSL certificate.
 - clone repo
 - run TF init
 - run TF apply
-( possible problems - GoDaddy stuck with DNS update..how to avoid?)
+( possible problems - GoDaddy stuck with DNS update..how to avoid?) 
+Theoretically we could specify timeout : 
+```terraform
+  timeouts {
+    create = "5m"
+    delete = "5m"
+  }
+```
+but, ACME resource does not support timeouts. I don't see any immediate solution right now except for running apply once more. Sleep in `local-exec` is not going to help in this case, it's the response that is slow.
+
+- Output example
+  ```bash
+  Outputs:
+
+  backend_fqdn = ptfe-pm-1_backend.guselietov.com
+  cert_url = https://acme-v02.api.letsencrypt.org/acme/cert/035a5ed202a09ab4f926a4d99ae50f9bdfb5
+  full_site_name = ptfe-pm-1.guselietov.com
+  loadbalancer_fqdn = ag-tfe-clb-493767462.eu-central-1.elb.amazonaws.com
+  public_dns = ec2-18-184-220-142.eu-central-1.compute.amazonaws.com
+  public_ip = 18.184.220.142
+  ```
 - Login to instance
 - Run TFE install
 ```bash
@@ -53,6 +73,11 @@ To continue the installation, visit the following URL in your browser:
 - Web-portion : 
 ...
 ...
+
+  - Save settings, ..TFE starting
+
+# Run-log 
+## Disk making (manual test)
 - Find and make the disk : 
   - Determine the disk : 
   ```bash
@@ -113,9 +138,6 @@ To continue the installation, visit the following URL in your browser:
   nvme0n1     259:2    0   41G  0 disk /tfe-data  
   ```
   - And we provide that path to installation 
-  - Save settings, ..TFE starting
-
-# Run-log 
 
 ## DSN module tests : 
 - Created code [modules/dns_godaddy](modules/dns_godaddy)
