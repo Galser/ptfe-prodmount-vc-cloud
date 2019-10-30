@@ -452,7 +452,7 @@ Success!
 
 
 # TODO
-- [ ] add VPC and security group creation
+
 - [ ] create instruction block
 - [ ] redeploy PTFE to test instructions
 - [ ] update README
@@ -465,7 +465,7 @@ Success!
   - [x] instance module/code ( including EBS)
   - [x] main code
 - [x] install TFE in Prod mode, write down steps
-
+- [ ] add VPC and security group creation
 
 # Notes 
 
