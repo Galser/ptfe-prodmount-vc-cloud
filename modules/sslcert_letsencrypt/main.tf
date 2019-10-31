@@ -12,7 +12,7 @@ resource "acme_certificate" "certificate" {
   common_name     = "${var.host}.${var.domain}"
 
   dns_challenge {
-    provider = "godaddy"
+    provider = var.dns_provider
   }
 }
 

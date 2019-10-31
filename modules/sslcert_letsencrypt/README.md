@@ -1,13 +1,11 @@
-# GoDaddy DSN module
+# Let's Encrypt cert module
 
 A terraform module to create SSL Cert fro the given DNS record in
-GoDaddy managed domain
+some DNS managed domain (ClodFlare in our case) 
 
 # Dependency
 
-- Require GoDaddy plugin
-- Require initialization of GoDaddy provider and corresponding ENV variable
-setting
+- Require some compatible with ACME DNS provider
 - Require ACME provider initialization
 
 See [installation](#installation) section below  for more details 
@@ -20,6 +18,7 @@ Please, do not initialize request first for testing in STAGING then transfer it 
 ## Inputs
 - **domain**  *[String]* -  Domain for the record
 - **host**  *[String]* -  Host part for the record
+- **dns_provider**  *[String]* -  Name of DNS provider ( for example "cloudflare", "godaddy" and etc)
 
 ## Outputs
 - **cert_pem** - *strng* - PEM-encoded Certificate
@@ -30,29 +29,8 @@ Please, do not initialize request first for testing in STAGING then transfer it 
 
 # Installation
 
-- Install GoDaddy plugin :  https://github.com/n3integration/terraform-godaddy
-    - Run :
-    ```bash
-    bash <(curl -s https://raw.githubusercontent.com/n3integration/terraform-godaddy/master/install.sh)
-    ```
-    - This is going to create plugin binary in `~/.terraform/plugins` , while the recommended path should be `~/.terraform.d/plugins/`, and the name should be in a proper format pattern . let's move and rename it :
-    ```bash
-    mv ~/.terraform/plugins/terraform-godaddy ~/.terraform.d/plugins/terraform-provider-godaddy
-    ```
-- Register and export as env variables GoDaddy API keys.
-    - Use this link : https://developer.godaddy.com/keys/ ( pay attention that you are creating API KEY IN **production** area)
-    - Export them via :
-    ```bash
-    export GODADDY_API_KEY=MY_KEY
-    export GODADDY_API_SECRET=MY_SECRET
-    ```
-- GoDaddy provider init : 
-```terraform
-provider "godaddy" {}
-```
 - ACME provider init example : 
 ```terraform
-remote:      https://github.com/Galser/ptfe-prodmount-vc-cloud/pull/new/f-dns-module
 provider "acme" {
   # PRODUCTION
   version    = "~> 1.0"

@@ -8,7 +8,7 @@ This repo contains all the code and instructions on how to install PTFE (Prod) v
 
 # Requirements
 
-This repository assumes general knowledge about Terraform, if not, please get yourself accustomed first by going through [getting started guide for Terraform](https://learn.hashicorp.com/terraform?track=getting-started#getting-started). We also going to use AWS EC2 as our infrastructure provider, DNS service of GoDaddy and SSL Certificates from LetsEncrypt.
+This repository assumes general knowledge about Terraform, if not, please get yourself accustomed first by going through [getting started guide for Terraform](https://learn.hashicorp.com/terraform?track=getting-started#getting-started). We also going to use AWS EC2 as our infrastructure provider, DNS service of CloudFlare and SSL Certificates from LetsEncrypt.
 
 To learn more about the mentioned above tools and technologies -  please check section [Technologies near the end of the README](#technologies)
 
@@ -25,24 +25,17 @@ To learn more about the mentioned above tools and technologies -  please check s
     export AWS_ACCESS_KEY_ID="YOUR ACCESS KEY"
     export AWS_SECRET_ACCESS_KEY="YOUR SECRET KEY"
     ```
-- Prepare GoDaddy authentication for your domain DNS management - register and export as env variables GoDaddy API keys.
-    - Use this link : https://developer.godaddy.com/keys/ ( pay attention that you are creating API key in **production** area)
-    - Export them by executing :
+- Prepare CloudFlare authentication for your domain DNS management - register and export as env variables API keys and tokens. Follow instructions from CloudFlare here: https://support.cloudflare.com/hc/en-us/articles/200167836-Managing-API-Tokens-and-Keys
+    - Export generated token and API keys :
     ```bash
-    export GODADDY_API_KEY=MY_KEY
-    export GODADDY_API_SECRET=MY_SECRET
-    ```
-- Install [GoDaddy plugin](https://github.com/n3integration/terraform-godaddy) for Terraform. Run from command line :  
-    ```bash
-    bash <(curl -s https://raw.githubusercontent.com/n3integration/terraform-godaddy/master/install.sh)
-    ```
-    - This is going to create plugin binary in `~/.terraform/plugins` , while the recommended path should be `~/.terraform.d/plugins/`, and the name should be in a proper format pattern . let's move and rename it :
-    ```bash
-    mv ~/.terraform/plugins/terraform-godaddy ~/.terraform.d/plugins/terraform-provider-godaddy
+    export CLOUDFLARE_API_KEY=YOUR_API_KEY_HERE
+    export CLOUDFLARE_API_TOKEN=YOUR_TOKEN_HERE
+    export CLOUDFLARE_ZONE_API_TOKEN=YOUR_TOKEN_HERE
+    export CLOUDFLARE_DNS_API_TOKEN=YOUR_TOKEN_HERE
     ```
 - Clone this repo (*use the tools of your choice*)
 - Open the folder with cloned repo
-- Define you own domain name in [variables.tf](variables.tf), edit on 2-nd line, following block : 
+- Define your domain name in [variables.tf](variables.tf), edit on 2-nd line, following block : 
   ```terraform
   variable "site_domain" {
     default = "guselietov.com"
@@ -52,10 +45,14 @@ To learn more about the mentioned above tools and technologies -  please check s
 ```
 terraform init
 ```
+Example output can be found here : [terraform_init.md](terraform_init.md)
+
 - Now let's spin up everything, by executing :
 ```
 terraform apply -auto-approve
 ```
+Example output can be found here : [terraform_apply.md](terraform_apply.md)
+
 Execution will take some time, and at the very end of the output you should see something similar to : 
 ```bash
 Outputs:
@@ -67,24 +64,6 @@ loadbalancer_fqdn = ag-tfe-clb-493767462.eu-central-1.elb.amazonaws.com
 public_dns = ec2-18-184-220-142.eu-central-1.compute.amazonaws.com
 public_ip = 18.184.220.142
 ```
-  > One caveat. Sometimes DNS server of GoDaddy not replying fast enough to Let'sEcnrypt. There is no implemented automated solution for the problem in the current project, so, in case you hitting the time out with challenge/response for SSL certificate creation, just run terraform apply once more. 
-  - Example of the error : 
-  ```bash
-    Error: error creating certificate: acme: Error -> One or more domains had a problem:
-    [ptfe-pm-1.guselietov.com] acme: error: 400 :: urn:ietf:params:acme:error:dns :: DNS problem: NXDOMAIN looking up TXT for _acme-challenge.ptfe-pm-1.guselietov.com, url:
-
-
-      on modules/sslcert_letsencrypt/main.tf line 10, in resource "acme_certificate" "certificate":
-      10: resource "acme_certificate" "certificate"
-  ```
-  AND in THE same time in GoDaddy panel for the TXT record I can see : 
-  **"An unexpected error occurred, please contact support"**
-  or this : 
-
-  ![GoDaddy DNS error](screenshots/dns_goddady_error.png) 
-
-  Which disappears after some minutes. So it looks like API slow to update records in conjunction wit the way how TF plugin work. Usually second run of `terraform apply` will solve the issue.  **I don't know solution to this problem yet**
-  
 - Please note that the successful `apply` should create 3 files with SSL certificate information in local folder : 
 ```bash
 # ls -l site*
@@ -143,7 +122,7 @@ ssh ubuntu@18.184.220.142
     - Choose File for Certificate ( point to `site_ssl_cert.pem` in the current folder)
     - and press green button **[Upload & Continue]**
 
-   > Sometimes, depending from the speed of nstance connection and external resources replies you will fail accessing this screen, because load-balancer could not detected that Terraform Dashboard already running and removed it from service. Just wait 30 seconds and refresh the page.  
+   > Sometimes, depending on the speed of instance connection and external resources replies you will fail to access this screen because load-balancer could not detect that Terraform Dashboard already running and removed it from service. Just wait 30 seconds and refresh the page.  
 - Now you will need to present your license file. Usually, it comes in a special tar-ball package with extension RLI. Press **[Choose license]**, Locate the file and upload.
 ![Add license form](screenshots/2_add_license.png)
     > And you can also see - that you've been automatically redirected to the new URL: `https://ptfe-pm-1.guselietov.com:8800/`
@@ -329,7 +308,6 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
 
 # TODO
 
-- [ ] switch to CloudFlare or DynDNS, as they see mto perfom better 
 
 # DONE
 - [x] define objectives 
@@ -343,15 +321,17 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
 - [x] create instruction block
 - [x] redeploy PTFE to test instructions
 - [x] update README
+- [x] switch to CloudFlare or DynDNS, as they see mto perform better
+- [x] GoDaddy DNS management removed
 
 
 # Notes 
 
-To make main README less obscure, internal notes been extracted into a separate file : [notes.md](notes.md)
+To make the main README less obscure, internal notes been extracted into a separate file : [notes.md](notes.md)
 
-Full run log for apply can be found here : [apply.log](apply.log)
+Full run log for apply can be found here : [terraform_apply.md](terraform_apply.md)
 
-Full run log for destruction can be found here : [destroy.log](destroy.log)
+Full run log for destruction can be found here : [terraform_destroy.md](terraform_destroy.md)
 
 
 
@@ -365,6 +345,6 @@ Full run log for destruction can be found here : [destroy.log](destroy.log)
 
 3. **This project for virtualization** uses **AWS EC2** - Amazon Elastic Compute Cloud (Amazon EC2 for short) - a web service that provides secure, resizable compute capacity in the cloud. It is designed to make web-scale cloud computing easier for developers. You can read in details and create a free try-out account if you don't have one here :  [Amazon EC2 main page](https://aws.amazon.com/ec2/) 
 
-4. **GoDaddy** - GoDaddy Inc. is an American publicly traded Internet domain registrar and web hosting company, headquartered in Scottsdale, Arizona, and incorporated in Delaware. More information here: https://www.godaddy.com/
+4. **Cloudflare**, - is an American web infrastructure and website security company, providing content delivery network services, DDoS mitigation, Internet security, and distributed domain name server services. More information can be found here: https://www.cloudflare.com/ 
 
 5. **Let'sEncrypt** - Let's Encrypt is a non-profit certificate authority run by Internet Security Research Group that provides X.509 certificates for Transport Layer Security encryption at no charge. The certificate is valid for 90 days, during which renewal can take place at any time. You can find out more on their [official page](https://letsencrypt.org/)

@@ -8,8 +8,18 @@ module "vpc_aws" {
 }
 
 # Network : DNS GoDaddy
-module "dns_godaddy" {
-  source = "./modules/dns_godaddy"
+#module "dns_godaddy" {
+#  source = "./modules/dns_godaddy"
+#
+#  host         = var.site_record
+#  domain       = var.site_domain
+#  cname_target = aws_elb.ptfe_lb.dns_name
+#  record_ip    = "${aws_instance.ptfe.public_ip}"
+#}
+
+# Network : DNS CloudFlare
+module "dns_cloudflare" {
+  source = "./modules/dns_cloudflare"
 
   host         = var.site_record
   domain       = var.site_domain
@@ -17,12 +27,14 @@ module "dns_godaddy" {
   record_ip    = "${aws_instance.ptfe.public_ip}"
 }
 
+
 # Certificate : SSL from Let'sEncrypt
 module "sslcert_letsencrypt" {
   source = "./modules/sslcert_letsencrypt"
 
-  host   = var.site_record
-  domain = var.site_domain
+  host         = var.site_record
+  domain       = var.site_domain
+  dns_provider = "cloudflare"
 }
 
 # Instance  
