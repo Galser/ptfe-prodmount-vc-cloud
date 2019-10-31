@@ -8,7 +8,7 @@ This repo contains all the code and instructions on how to install PTFE (Prod) v
 
 # Requirements
 
-This repository assumes general knowledge about Terraform, if not, please get yourself accustomed first by going through [getting started guide for Terraform](https://learn.hashicorp.com/terraform?track=getting-started#getting-started). We also going to use Vagrant with VirtualBox.
+This repository assumes general knowledge about Terraform, if not, please get yourself accustomed first by going through [getting started guide for Terraform](https://learn.hashicorp.com/terraform?track=getting-started#getting-started). We also going to use AWS EC2 as our infrastructure provider, DNS service of GoDaddy and SSL Certificates from LetsEncrypt.
 
 To learn more about the mentioned above tools and technologies -  please check section [Technologies near the end of the README](#technologies)
 
@@ -16,7 +16,7 @@ To learn more about the mentioned above tools and technologies -  please check s
 # How-to
 
 ## Build infrastructure
-- Beforehand you will need to have SSH key in RSA format available at the default location :
+- Beforehand, you will need to have SSH RSA key available at the default location :
   - `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub`
   > This key is going to be used later to connect to the instance where TFE will be running.
   
@@ -143,7 +143,7 @@ ssh ubuntu@18.184.220.142
     - Choose File for Certificate ( point to `site_ssl_cert.pem` in the current folder)
     - and press green button **[Upload & Continue]**
 
-   > Sometimes, depending from the speed of teh instance connection and external resources replies you will fail accessing this screen, because load-balancer could not detected Terraform Dashboard running and removed it from service. Just wait 30 seconds and refresh the page.  
+   > Sometimes, depending from the speed of nstance connection and external resources replies you will fail accessing this screen, because load-balancer could not detected that Terraform Dashboard already running and removed it from service. Just wait 30 seconds and refresh the page.  
 - Now you will need to present your license file. Usually, it comes in a special tar-ball package with extension RLI. Press **[Choose license]**, Locate the file and upload.
 ![Add license form](screenshots/2_add_license.png)
     > And you can also see - that you've been automatically redirected to the new URL: `https://ptfe-pm-1.guselietov.com:8800/`
@@ -329,7 +329,7 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
 
 # TODO
 
-- [ ] update README
+- [ ] switch to CloudFlare or DynDNS, as they see mto perfom better 
 
 # DONE
 - [x] define objectives 
@@ -342,6 +342,7 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
 - [x] add VPC and security group creation
 - [x] create instruction block
 - [x] redeploy PTFE to test instructions
+- [x] update README
 
 
 # Notes 
