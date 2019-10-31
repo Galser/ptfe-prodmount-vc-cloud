@@ -20,5 +20,6 @@ output "loadbalancer_fqdn" {
 }
 
 output "backend_fqdn" {
-  value = "${module.dns_godaddy.backend_fqdn}"
+  value = "${module.dns_cloudflare.backend_fqdn}"
 }
+

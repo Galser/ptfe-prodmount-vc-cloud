@@ -1,4 +1,4 @@
-# parameters for the dns_goddady module
+# parameters for the dns_cloudflare module
 variable "domain" {
   description = "The DOMAIN part of the record"
 }
@@ -14,3 +14,4 @@ variable "record_ip" {
 variable "cname_target" {
   description = "The target for CNAME record"
 }
+
