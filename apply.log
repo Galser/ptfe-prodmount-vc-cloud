@@ -1,0 +1,598 @@
+ ~/labs/skills/ptfe-prodmount-vc-cloud   f-redeploy-by-howto ●  terraform apply
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_elb.ptfe_lb will be created
+  + resource "aws_elb" "ptfe_lb" {
+      + arn                         = (known after apply)
+      + availability_zones          = (known after apply)
+      + connection_draining         = true
+      + connection_draining_timeout = 400
+      + cross_zone_load_balancing   = true
+      + dns_name                    = (known after apply)
+      + id                          = (known after apply)
+      + idle_timeout                = 400
+      + instances                   = (known after apply)
+      + internal                    = (known after apply)
+      + name                        = "ag-tfe-clb"
+      + security_groups             = (known after apply)
+      + source_security_group       = (known after apply)
+      + source_security_group_id    = (known after apply)
+      + subnets                     = (known after apply)
+      + tags                        = {
+          + "Name"      = "ptfe-prodmount-andrii"
+          + "andriitag" = "true"
+          + "learntag"  = "200tf"
+        }
+      + zone_id                     = (known after apply)
+
+      + health_check {
+          + healthy_threshold   = 10
+          + interval            = 30
+          + target              = "TCP:8800"
+          + timeout             = 15
+          + unhealthy_threshold = 3
+        }
+
+      + listener {
+          + instance_port     = 443
+          + instance_protocol = "tcp"
+          + lb_port           = 443
+          + lb_protocol       = "tcp"
+        }
+      + listener {
+          + instance_port     = 8800
+          + instance_protocol = "tcp"
+          + lb_port           = 8800
+          + lb_protocol       = "tcp"
+        }
+    }
+
+  # aws_instance.ptfe will be created
+  + resource "aws_instance" "ptfe" {
+      + ami                          = "ami-08a162fe1419adb2a"
+      + arn                          = (known after apply)
+      + associate_public_ip_address  = (known after apply)
+      + availability_zone            = (known after apply)
+      + cpu_core_count               = (known after apply)
+      + cpu_threads_per_core         = (known after apply)
+      + get_password_data            = false
+      + host_id                      = (known after apply)
+      + id                           = (known after apply)
+      + instance_state               = (known after apply)
+      + instance_type                = "m5.large"
+      + ipv6_address_count           = (known after apply)
+      + ipv6_addresses               = (known after apply)
+      + key_name                     = (known after apply)
+      + network_interface_id         = (known after apply)
+      + password_data                = (known after apply)
+      + placement_group              = (known after apply)
+      + primary_network_interface_id = (known after apply)
+      + private_dns                  = (known after apply)
+      + private_ip                   = (known after apply)
+      + public_dns                   = (known after apply)
+      + public_ip                    = (known after apply)
+      + security_groups              = (known after apply)
+      + source_dest_check            = true
+      + subnet_id                    = (known after apply)
+      + tags                         = {
+          + "Name"      = "ptfe-prodmount-andrii"
+          + "andriitag" = "true"
+          + "learntag"  = "200tf"
+        }
+      + tenancy                      = (known after apply)
+      + volume_tags                  = {
+          + "Name"      = "ptfe-prodmount-andrii"
+          + "andriitag" = "true"
+        }
+      + vpc_security_group_ids       = (known after apply)
+
+      + ebs_block_device {
+          + delete_on_termination = false
+          + device_name           = "/dev/sdg"
+          + encrypted             = (known after apply)
+          + iops                  = (known after apply)
+          + kms_key_id            = (known after apply)
+          + snapshot_id           = (known after apply)
+          + volume_id             = (known after apply)
+          + volume_size           = 41
+          + volume_type           = (known after apply)
+        }
+
+      + ephemeral_block_device {
+          + device_name  = (known after apply)
+          + no_device    = (known after apply)
+          + virtual_name = (known after apply)
+        }
+
+      + network_interface {
+          + delete_on_termination = (known after apply)
+          + device_index          = (known after apply)
+          + network_interface_id  = (known after apply)
+        }
+
+      + root_block_device {
+          + delete_on_termination = true
+          + encrypted             = (known after apply)
+          + iops                  = (known after apply)
+          + kms_key_id            = (known after apply)
+          + volume_id             = (known after apply)
+          + volume_size           = 40
+          + volume_type           = (known after apply)
+        }
+    }
+
+  # aws_key_pair.ptfe-key will be created
+  + resource "aws_key_pair" "ptfe-key" {
+      + fingerprint = (known after apply)
+      + id          = (known after apply)
+      + key_name    = "ptfe-key"
+      + public_key  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC704xhVAxg9Bhq0jIbABWVjKl2DW7apvfFj3UtvActT9a9w1Xt5Fa2jEFuzMXceFtpDjgq5j8E8vsrICu8Wpeqwuo2SR2aAjEjBDfJzOM3kmF9wuWdpacDhVm1luPJiqqM4wLAPufht5vhdlqD8QtW/q84MMHbbkXNjdvgqsIcvDWcCRLQDa1Du3ElF9V+/n182ihIDfQCUtQS0zc9lIcUemZMSLRhxAWA9BZYCu8wnUuLBE/fv8apC0NxOayklSBEj7Pk/HxJnYxTeskqGs5MkzHydObPZSnAtX4Hfe1KlmsAVwt6Sj2bG2AYpt9G0jF7Oq9sYQ6nBTMAxENIsmhB andrii@guselietovs-mbp.home"
+    }
+
+  # module.dns_godaddy.godaddy_domain_record.dns_godaddy_record will be created
+  + resource "godaddy_domain_record" "dns_godaddy_record" {
+      + domain = "guselietov.com"
+      + id     = (known after apply)
+
+      + record {
+          + data     = "@"
+          + name     = "www"
+          + priority = 0
+          + ttl      = 3600
+          + type     = "CNAME"
+        }
+      + record {
+          + data     = "_domainconnect.gd.domaincontrol.com"
+          + name     = "_domainconnect"
+          + priority = 0
+          + ttl      = 3600
+          + type     = "CNAME"
+        }
+      + record {
+          + data     = (known after apply)
+          + name     = "ptfe-pm-1"
+          + priority = 0
+          + ttl      = 600
+          + type     = "CNAME"
+        }
+      + record {
+          + data     = (known after apply)
+          + name     = "ptfe-pm-1_backend"
+          + priority = 0
+          + ttl      = 600
+          + type     = "A"
+        }
+    }
+
+  # module.sslcert_letsencrypt.acme_certificate.certificate will be created
+  + resource "acme_certificate" "certificate" {
+      + account_key_pem    = (sensitive value)
+      + certificate_domain = (known after apply)
+      + certificate_p12    = (sensitive value)
+      + certificate_pem    = (known after apply)
+      + certificate_url    = (known after apply)
+      + common_name        = "ptfe-pm-1.guselietov.com"
+      + id                 = (known after apply)
+      + issuer_pem         = (known after apply)
+      + key_type           = "2048"
+      + min_days_remaining = 30
+      + must_staple        = false
+      + private_key_pem    = (sensitive value)
+
+      + dns_challenge {
+          + provider = "godaddy"
+        }
+    }
+
+  # module.sslcert_letsencrypt.acme_registration.reg will be created
+  + resource "acme_registration" "reg" {
+      + account_key_pem  = (sensitive value)
+      + email_address    = "andrii@guselietov.com"
+      + id               = (known after apply)
+      + registration_url = (known after apply)
+    }
+
+  # module.sslcert_letsencrypt.local_file.ssl_cert_bundle_file will be created
+  + resource "local_file" "ssl_cert_bundle_file" {
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "./site_ssl_cert_bundle.pem"
+      + id                   = (known after apply)
+      + sensitive_content    = (sensitive value)
+    }
+
+  # module.sslcert_letsencrypt.local_file.ssl_cert_file will be created
+  + resource "local_file" "ssl_cert_file" {
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "./site_ssl_cert.pem"
+      + id                   = (known after apply)
+      + sensitive_content    = (sensitive value)
+    }
+
+  # module.sslcert_letsencrypt.local_file.ssl_private_key_file will be created
+  + resource "local_file" "ssl_private_key_file" {
+      + directory_permission = "0777"
+      + file_permission      = "0777"
+      + filename             = "./site_ssl_private_key.pem"
+      + id                   = (known after apply)
+      + sensitive_content    = (sensitive value)
+    }
+
+  # module.sslcert_letsencrypt.tls_private_key.private_key will be created
+  + resource "tls_private_key" "private_key" {
+      + algorithm                  = "RSA"
+      + ecdsa_curve                = "P224"
+      + id                         = (known after apply)
+      + private_key_pem            = (sensitive value)
+      + public_key_fingerprint_md5 = (known after apply)
+      + public_key_openssh         = (known after apply)
+      + public_key_pem             = (known after apply)
+      + rsa_bits                   = 2048
+    }
+
+  # module.vpc_aws.aws_internet_gateway.ag_tfe_GW will be created
+  + resource "aws_internet_gateway" "ag_tfe_GW" {
+      + id       = (known after apply)
+      + owner_id = (known after apply)
+      + tags     = {
+          + "Name" = "ag_ptfe_pm_internet_gateway"
+        }
+      + vpc_id   = (known after apply)
+    }
+
+  # module.vpc_aws.aws_route.ag_tfe_internet_access will be created
+  + resource "aws_route" "ag_tfe_internet_access" {
+      + destination_cidr_block     = "0.0.0.0/0"
+      + destination_prefix_list_id = (known after apply)
+      + egress_only_gateway_id     = (known after apply)
+      + gateway_id                 = (known after apply)
+      + id                         = (known after apply)
+      + instance_id                = (known after apply)
+      + instance_owner_id          = (known after apply)
+      + nat_gateway_id             = (known after apply)
+      + network_interface_id       = (known after apply)
+      + origin                     = (known after apply)
+      + route_table_id             = (known after apply)
+      + state                      = (known after apply)
+    }
+
+  # module.vpc_aws.aws_route_table.ag_tfe_route_table will be created
+  + resource "aws_route_table" "ag_tfe_route_table" {
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + route            = (known after apply)
+      + tags             = {
+          + "Name" = "ag_ptfe_pm_route_table"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.vpc_aws.aws_route_table_association.ag_tfe_association will be created
+  + resource "aws_route_table_association" "ag_tfe_association" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc_aws.aws_security_group.ag_tfe_Security_Group will be created
+  + resource "aws_security_group" "ag_tfe_Security_Group" {
+      + arn                    = (known after apply)
+      + description            = "ag_ptfe_pm Security Group"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 1024
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 65535
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 443
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 443
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 80
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 80
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 22
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 22
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 443
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 443
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 8800
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 8800
+            },
+        ]
+      + name                   = "ag_ptfe_pm Security Group"
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "ag_ptfe_pm_security_group"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.vpc_aws.aws_security_group.ag_tfe_Security_Group_elb will be created
+  + resource "aws_security_group" "ag_tfe_Security_Group_elb" {
+      + arn                    = (known after apply)
+      + description            = "ag_ptfe_pm ELB Security Group"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 0
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 443
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 443
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + description      = ""
+              + from_port        = 8800
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 8800
+            },
+        ]
+      + name                   = "ag_ptfe_pm-sg-elb"
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.vpc_aws.aws_subnet.ag_tfe_Subnet will be created
+  + resource "aws_subnet" "ag_tfe_Subnet" {
+      + arn                             = (known after apply)
+      + assign_ipv6_address_on_creation = false
+      + availability_zone               = "eu-central-1a"
+      + availability_zone_id            = (known after apply)
+      + cidr_block                      = "10.0.1.0/24"
+      + id                              = (known after apply)
+      + ipv6_cidr_block                 = (known after apply)
+      + ipv6_cidr_block_association_id  = (known after apply)
+      + map_public_ip_on_launch         = true
+      + owner_id                        = (known after apply)
+      + tags                            = {
+          + "Name" = "ag_ptfe_pm_subnet"
+        }
+      + vpc_id                          = (known after apply)
+    }
+
+  # module.vpc_aws.aws_vpc.ag_tfe will be created
+  + resource "aws_vpc" "ag_tfe" {
+      + arn                              = (known after apply)
+      + assign_generated_ipv6_cidr_block = false
+      + cidr_block                       = "10.0.0.0/16"
+      + default_network_acl_id           = (known after apply)
+      + default_route_table_id           = (known after apply)
+      + default_security_group_id        = (known after apply)
+      + dhcp_options_id                  = (known after apply)
+      + enable_classiclink               = (known after apply)
+      + enable_classiclink_dns_support   = (known after apply)
+      + enable_dns_hostnames             = true
+      + enable_dns_support               = true
+      + id                               = (known after apply)
+      + instance_tenancy                 = "default"
+      + ipv6_association_id              = (known after apply)
+      + ipv6_cidr_block                  = (known after apply)
+      + main_route_table_id              = (known after apply)
+      + owner_id                         = (known after apply)
+      + tags                             = {
+          + "Name" = "ag_ptfe_pm"
+        }
+    }
+
+Plan: 18 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+module.sslcert_letsencrypt.tls_private_key.private_key: Creating...
+module.sslcert_letsencrypt.tls_private_key.private_key: Creation complete after 1s [id=ece07a6b19fbf60a171402faece259011ac63130]
+module.sslcert_letsencrypt.acme_registration.reg: Creating...
+aws_key_pair.ptfe-key: Creating...
+module.vpc_aws.aws_vpc.ag_tfe: Creating...
+aws_key_pair.ptfe-key: Creation complete after 1s [id=ptfe-key]
+module.sslcert_letsencrypt.acme_registration.reg: Creation complete after 2s [id=https://acme-v02.api.letsencrypt.org/acme/acct/70659098]
+module.sslcert_letsencrypt.acme_certificate.certificate: Creating...
+module.vpc_aws.aws_vpc.ag_tfe: Creation complete after 7s [id=vpc-0e3cd087f665136b5]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Creating...
+module.vpc_aws.aws_route_table.ag_tfe_route_table: Creating...
+module.vpc_aws.aws_subnet.ag_tfe_Subnet: Creating...
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group_elb: Creating...
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group: Creating...
+module.sslcert_letsencrypt.acme_certificate.certificate: Still creating... [10s elapsed]
+module.vpc_aws.aws_route_table.ag_tfe_route_table: Creation complete after 6s [id=rtb-0bc397124de41bc75]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Creation complete after 6s [id=igw-01d33b70927d4b5e8]
+module.vpc_aws.aws_route.ag_tfe_internet_access: Creating...
+module.vpc_aws.aws_subnet.ag_tfe_Subnet: Creation complete after 6s [id=subnet-09a858fda87ee1867]
+module.vpc_aws.aws_route_table_association.ag_tfe_association: Creating...
+module.vpc_aws.aws_route_table_association.ag_tfe_association: Creation complete after 1s [id=rtbassoc-013a414ffa2389226]
+module.vpc_aws.aws_route.ag_tfe_internet_access: Creation complete after 1s [id=r-rtb-0bc397124de41bc751080289494]
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group_elb: Creation complete after 7s [id=sg-00fdfdfc4e570cafd]
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group: Creation complete after 7s [id=sg-0b4769edf9ca9f8cf]
+aws_instance.ptfe: Creating...
+module.sslcert_letsencrypt.acme_certificate.certificate: Still creating... [20s elapsed]
+aws_instance.ptfe: Still creating... [10s elapsed]
+aws_instance.ptfe: Provisioning with 'remote-exec'...
+aws_instance.ptfe (remote-exec): Connecting to remote host via SSH...
+aws_instance.ptfe (remote-exec):   Host: 18.197.247.167
+aws_instance.ptfe (remote-exec):   User: ubuntu
+aws_instance.ptfe (remote-exec):   Password: false
+aws_instance.ptfe (remote-exec):   Private key: true
+aws_instance.ptfe (remote-exec):   Certificate: false
+aws_instance.ptfe (remote-exec):   SSH Agent: true
+aws_instance.ptfe (remote-exec):   Checking Host Key: false
+aws_instance.ptfe: Still creating... [20s elapsed]
+aws_instance.ptfe (remote-exec): Connecting to remote host via SSH...
+aws_instance.ptfe (remote-exec):   Host: 18.197.247.167
+aws_instance.ptfe (remote-exec):   User: ubuntu
+aws_instance.ptfe (remote-exec):   Password: false
+aws_instance.ptfe (remote-exec):   Private key: true
+aws_instance.ptfe (remote-exec):   Certificate: false
+aws_instance.ptfe (remote-exec):   SSH Agent: true
+aws_instance.ptfe (remote-exec):   Checking Host Key: false
+aws_instance.ptfe: Still creating... [30s elapsed]
+aws_instance.ptfe (remote-exec): Connecting to remote host via SSH...
+aws_instance.ptfe (remote-exec):   Host: 18.197.247.167
+aws_instance.ptfe (remote-exec):   User: ubuntu
+aws_instance.ptfe (remote-exec):   Password: false
+aws_instance.ptfe (remote-exec):   Private key: true
+aws_instance.ptfe (remote-exec):   Certificate: false
+aws_instance.ptfe (remote-exec):   SSH Agent: true
+aws_instance.ptfe (remote-exec):   Checking Host Key: false
+aws_instance.ptfe (remote-exec): Connected!
+aws_instance.ptfe: Still creating... [40s elapsed]
+aws_instance.ptfe (remote-exec): 23 packages can be upgraded. Run 'apt list --upgradable' to see them.
+aws_instance.ptfe (remote-exec): curl is already the newest version (7.58.0-2ubuntu3.8).
+aws_instance.ptfe (remote-exec): curl set to manually installed.
+aws_instance.ptfe (remote-exec): wget is already the newest version (1.19.4-1ubuntu2.2).
+aws_instance.ptfe (remote-exec): wget set to manually installed.
+aws_instance.ptfe (remote-exec): 0 upgraded, 0 newly installed, 0 to remove and 36 not upgraded.
+aws_instance.ptfe (remote-exec): meta-data=/dev/nvme0n1           isize=512    agcount=4, agsize=2686976 blks
+aws_instance.ptfe (remote-exec):          =                       sectsz=512   attr=2, projid32bit=1
+aws_instance.ptfe (remote-exec):          =                       crc=1        finobt=1, sparse=0, rmapbt=0, reflink=0
+aws_instance.ptfe (remote-exec): data     =                       bsize=4096   blocks=10747904, imaxpct=25
+aws_instance.ptfe (remote-exec):          =                       sunit=0      swidth=0 blks
+aws_instance.ptfe (remote-exec): naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+aws_instance.ptfe (remote-exec): log      =internal log           bsize=4096   blocks=5248, version=2
+aws_instance.ptfe (remote-exec):          =                       sectsz=512   sunit=0 blks, lazy-count=1
+aws_instance.ptfe (remote-exec): realtime =none                   extsz=4096   blocks=0, rtextents=0
+aws_instance.ptfe: Creation complete after 43s [id=i-02fb0baa6232756a7]
+aws_elb.ptfe_lb: Creating...
+aws_elb.ptfe_lb: Creation complete after 5s [id=ag-tfe-clb]
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_record: Creating...
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_record: Creation complete after 5s [id=266392926]
+
+Error: error creating certificate: acme: Error -> One or more domains had a problem:
+[ptfe-pm-1.guselietov.com] acme: error: 403 :: urn:ietf:params:acme:error:unauthorized :: Incorrect TXT record "null" found at _acme-challenge.ptfe-pm-1.guselietov.com, url:
+
+
+  on modules/sslcert_letsencrypt/main.tf line 10, in resource "acme_certificate" "certificate":
+  10: resource "acme_certificate" "certificate" {
+
+>>> 
+AND in THE same time in GoDaddy panel for the TXT record I can see : 
+"An unexpected error occurred, please contact support" 
+
+2-nd apply : 
+
+  Enter a value: yes
+
+module.sslcert_letsencrypt.acme_certificate.certificate: Creating...
+module.sslcert_letsencrypt.acme_certificate.certificate: Still creating... [10s elapsed]
+module.sslcert_letsencrypt.acme_certificate.certificate: Still creating... [20s elapsed]
+module.sslcert_letsencrypt.acme_certificate.certificate: Still creating... [30s elapsed]
+module.sslcert_letsencrypt.acme_certificate.certificate: Creation complete after 32s [id=https://acme-v02.api.letsencrypt.org/acme/cert/034455f8bc90f2bdf55a41a9cb31f9820f49]
+module.sslcert_letsencrypt.local_file.ssl_private_key_file: Creating...
+module.sslcert_letsencrypt.local_file.ssl_cert_bundle_file: Creating...
+module.sslcert_letsencrypt.local_file.ssl_cert_file: Creating...
+module.sslcert_letsencrypt.local_file.ssl_cert_bundle_file: Creation complete after 0s [id=da4332946715ae1e6819779596f756b75661773b]
+module.sslcert_letsencrypt.local_file.ssl_private_key_file: Creation complete after 0s [id=4162988fbdf301a5e40c5b72389ee3c402854f71]
+module.sslcert_letsencrypt.local_file.ssl_cert_file: Creation complete after 0s [id=be5aa924aa68b46219a6097c0209b2449ade5b52]
+
+Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+backend_fqdn = ptfe-pm-1_backend.guselietov.com
+cert_url = https://acme-v02.api.letsencrypt.org/acme/cert/034455f8bc90f2bdf55a41a9cb31f9820f49
+full_site_name = ptfe-pm-1.guselietov.com
+loadbalancer_fqdn = ag-tfe-clb-1964265541.eu-central-1.elb.amazonaws.com
+public_dns = ec2-18-197-247-167.eu-central-1.compute.amazonaws.com
+public_ip = 18.197.247.167
+

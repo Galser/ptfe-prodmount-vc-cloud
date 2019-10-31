@@ -85,9 +85,9 @@ resource "aws_elb" "ptfe_lb" {
   subnets         = ["${module.vpc_aws.subnet_id}"]
 
   health_check {
-    healthy_threshold   = 10
-    unhealthy_threshold = 3
-    timeout             = 15
+    healthy_threshold   = 3
+    unhealthy_threshold = 10
+    timeout             = 10
     target              = "TCP:8800"
     interval            = 30
   }
