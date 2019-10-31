@@ -67,9 +67,25 @@ loadbalancer_fqdn = ag-tfe-clb-493767462.eu-central-1.elb.amazonaws.com
 public_dns = ec2-18-184-220-142.eu-central-1.compute.amazonaws.com
 public_ip = 18.184.220.142
 ```
-  > One caveat. Sometimes DNS server of GoDaddy (usually the second half of the day, maybe due to load) not replying fast enough to Let'sEcnrypt. There is no implemented automated solution for the problem in the current project, so, in case you hitting the time out with challenge/response for SSL certificate creation, just run terraform apply once more. 
+  > One caveat. Sometimes DNS server of GoDaddy not replying fast enough to Let'sEcnrypt. There is no implemented automated solution for the problem in the current project, so, in case you hitting the time out with challenge/response for SSL certificate creation, just run terraform apply once more. 
+  - Example of the error : 
+  ```bash
+    Error: error creating certificate: acme: Error -> One or more domains had a problem:
+    [ptfe-pm-1.guselietov.com] acme: error: 400 :: urn:ietf:params:acme:error:dns :: DNS problem: NXDOMAIN looking up TXT for _acme-challenge.ptfe-pm-1.guselietov.com, url:
+
+
+      on modules/sslcert_letsencrypt/main.tf line 10, in resource "acme_certificate" "certificate":
+      10: resource "acme_certificate" "certificate"
+  ```
+  AND in THE same time in GoDaddy panel for the TXT record I can see : 
+  **"An unexpected error occurred, please contact support"**
+  or this : 
+
+  ![GoDaddy DNS error](screenshots/dns_goddady_error.png) 
+
+  Which disappears after some minutes. So it looks like API slow to update records in conjunction wit the way how TF plugin work. Usually second run of `terraform apply` will solve the issue.  **I don't know solution to this problem yet**
   
-- Please note that the successfull `apply` should create 3 files with SSL certificate information in local folder : 
+- Please note that the successful `apply` should create 3 files with SSL certificate information in local folder : 
 ```bash
 # ls -l site*
 -rwxr-xr-x  1 andrii  staff  1939 Oct 29 11:54 site_ssl_cert.pem
@@ -87,8 +103,8 @@ ssh ubuntu@18.184.220.142
 
 - Start the PTFE install: 
 ```curl https://install.terraform.io/ptfe/stable | sudo bash```
-    - use Public IP-address from previous steps ( `18.184.220.142` in the example ) for the service question
-    - Reply `No` to proxy question.
+    - use Public IP-address from previous steps ( `18.184.220.142` in the example ) for the service question. You can just press [Enter],
+    - Reply `N` to proxy question. Again - you can just press [Enter]
     Output example : 
   ```bash
     % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -126,6 +142,8 @@ ssh ubuntu@18.184.220.142
     - Choose File for Private Key ( point to `site_ssl_private_key.pem` in the current folder)
     - Choose File for Certificate ( point to `site_ssl_cert.pem` in the current folder)
     - and press green button **[Upload & Continue]**
+
+   > Sometimes, depending from the speed of teh instance connection and external resources replies you will fail accessing this screen, because load-balancer could not detected Terraform Dashboard running and removed it from service. Just wait 30 seconds and refresh the page.  
 - Now you will need to present your license file. Usually, it comes in a special tar-ball package with extension RLI. Press **[Choose license]**, Locate the file and upload.
 ![Add license form](screenshots/2_add_license.png)
     > And you can also see - that you've been automatically redirected to the new URL: `https://ptfe-pm-1.guselietov.com:8800/`
@@ -311,7 +329,6 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
 
 # TODO
 
-- [ ] redeploy PTFE to test instructions
 - [ ] update README
 
 # DONE
@@ -324,10 +341,17 @@ skip **Connecting to VCS**, we don't need it for now. Enter the workspace name a
 - [x] install TFE in Prod mode, write down steps
 - [x] add VPC and security group creation
 - [x] create instruction block
+- [x] redeploy PTFE to test instructions
+
 
 # Notes 
 
-To make main README less obscure notes been extracted into a separate file : [notes.md](notes.md)
+To make main README less obscure, internal notes been extracted into a separate file : [notes.md](notes.md)
+
+Full run log for apply can be found here : [apply.log](apply.log)
+
+Full run log for destruction can be found here : [destroy.log](destroy.log)
+
 
 
 # Technologies

@@ -1,0 +1,591 @@
+terraform destroy
+module.sslcert_letsencrypt.tls_private_key.private_key: Refreshing state... [id=62b12a9842f1a32341c4306df85397109c5e54de]
+module.sslcert_letsencrypt.acme_registration.reg: Refreshing state... [id=https://acme-v02.api.letsencrypt.org/acme/acct/70466164]
+module.sslcert_letsencrypt.acme_certificate.certificate: Refreshing state... [id=https://acme-v02.api.letsencrypt.org/acme/cert/035a5ed202a09ab4f926a4d99ae50f9bdfb5]
+module.sslcert_letsencrypt.local_file.ssl_cert_file: Refreshing state... [id=7ecfdf3d4cd128ffc44fbf7f6434352adfdd0d13]
+module.sslcert_letsencrypt.local_file.ssl_private_key_file: Refreshing state... [id=f4541a6e7cf0bd68c52883361ce5f346b5ecd156]
+module.sslcert_letsencrypt.local_file.ssl_cert_bundle_file: Refreshing state... [id=cf73fea18352a3cefa41c9685b51bcae065bdfbc]
+aws_key_pair.ptfe-key: Refreshing state... [id=ptfe-key]
+module.vpc_aws.aws_vpc.ag_tfe: Refreshing state... [id=vpc-021fc971320c114da]
+module.vpc_aws.aws_subnet.ag_tfe_Subnet: Refreshing state... [id=subnet-035efb5920f2abe6f]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Refreshing state... [id=igw-0e5a3f544443278e4]
+module.vpc_aws.aws_route_table.ag_tfe_route_table: Refreshing state... [id=rtb-027922e6f41ea6cec]
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group_elb: Refreshing state... [id=sg-0fbe290e1224804fe]
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group: Refreshing state... [id=sg-0e85e52db22f05849]
+module.vpc_aws.aws_route.ag_tfe_internet_access: Refreshing state... [id=r-rtb-027922e6f41ea6cec1080289494]
+module.vpc_aws.aws_route_table_association.ag_tfe_association: Refreshing state... [id=rtbassoc-01073a73db968d172]
+aws_instance.ptfe: Refreshing state... [id=i-0f331bcd266642fcc]
+aws_elb.ptfe_lb: Refreshing state... [id=ag-tfe-clb]
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_record: Refreshing state... [id=266392926]
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_elb.ptfe_lb will be destroyed
+  - resource "aws_elb" "ptfe_lb" {
+      - arn                         = "arn:aws:elasticloadbalancing:eu-central-1:729476260648:loadbalancer/ag-tfe-clb" -> null
+      - availability_zones          = [
+          - "eu-central-1a",
+        ] -> null
+      - connection_draining         = true -> null
+      - connection_draining_timeout = 400 -> null
+      - cross_zone_load_balancing   = true -> null
+      - dns_name                    = "ag-tfe-clb-493767462.eu-central-1.elb.amazonaws.com" -> null
+      - id                          = "ag-tfe-clb" -> null
+      - idle_timeout                = 400 -> null
+      - instances                   = [
+          - "i-0f331bcd266642fcc",
+        ] -> null
+      - internal                    = false -> null
+      - name                        = "ag-tfe-clb" -> null
+      - security_groups             = [
+          - "sg-0fbe290e1224804fe",
+        ] -> null
+      - source_security_group       = "729476260648/ag_ptfe_pm-sg-elb" -> null
+      - source_security_group_id    = "sg-0fbe290e1224804fe" -> null
+      - subnets                     = [
+          - "subnet-035efb5920f2abe6f",
+        ] -> null
+      - tags                        = {
+          - "Name"      = "ptfe-prodmount-andrii"
+          - "andriitag" = "true"
+          - "learntag"  = "200tf"
+        } -> null
+      - zone_id                     = "Z215JYRZR1TBD5" -> null
+
+      - health_check {
+          - healthy_threshold   = 10 -> null
+          - interval            = 30 -> null
+          - target              = "TCP:8800" -> null
+          - timeout             = 15 -> null
+          - unhealthy_threshold = 3 -> null
+        }
+
+      - listener {
+          - instance_port     = 443 -> null
+          - instance_protocol = "tcp" -> null
+          - lb_port           = 443 -> null
+          - lb_protocol       = "tcp" -> null
+        }
+      - listener {
+          - instance_port     = 8800 -> null
+          - instance_protocol = "tcp" -> null
+          - lb_port           = 8800 -> null
+          - lb_protocol       = "tcp" -> null
+        }
+    }
+
+  # aws_instance.ptfe will be destroyed
+  - resource "aws_instance" "ptfe" {
+      - ami                          = "ami-08a162fe1419adb2a" -> null
+      - arn                          = "arn:aws:ec2:eu-central-1:729476260648:instance/i-0f331bcd266642fcc" -> null
+      - associate_public_ip_address  = true -> null
+      - availability_zone            = "eu-central-1a" -> null
+      - cpu_core_count               = 1 -> null
+      - cpu_threads_per_core         = 2 -> null
+      - disable_api_termination      = false -> null
+      - ebs_optimized                = false -> null
+      - get_password_data            = false -> null
+      - id                           = "i-0f331bcd266642fcc" -> null
+      - instance_state               = "running" -> null
+      - instance_type                = "m5.large" -> null
+      - ipv6_address_count           = 0 -> null
+      - ipv6_addresses               = [] -> null
+      - key_name                     = "ptfe-key" -> null
+      - monitoring                   = false -> null
+      - primary_network_interface_id = "eni-0bbbf0f977ce27ad9" -> null
+      - private_dns                  = "ip-10-0-1-93.eu-central-1.compute.internal" -> null
+      - private_ip                   = "10.0.1.93" -> null
+      - public_dns                   = "ec2-18-184-220-142.eu-central-1.compute.amazonaws.com" -> null
+      - public_ip                    = "18.184.220.142" -> null
+      - security_groups              = [] -> null
+      - source_dest_check            = true -> null
+      - subnet_id                    = "subnet-035efb5920f2abe6f" -> null
+      - tags                         = {
+          - "Name"      = "ptfe-prodmount-andrii"
+          - "andriitag" = "true"
+          - "learntag"  = "200tf"
+        } -> null
+      - tenancy                      = "default" -> null
+      - volume_tags                  = {
+          - "Name"      = "ptfe-prodmount-andrii"
+          - "andriitag" = "true"
+        } -> null
+      - vpc_security_group_ids       = [
+          - "sg-0e85e52db22f05849",
+        ] -> null
+
+      - ebs_block_device {
+          - delete_on_termination = false -> null
+          - device_name           = "/dev/sdg" -> null
+          - encrypted             = false -> null
+          - iops                  = 123 -> null
+          - volume_id             = "vol-0724c7e9221acab8d" -> null
+          - volume_size           = 41 -> null
+          - volume_type           = "gp2" -> null
+        }
+
+      - root_block_device {
+          - delete_on_termination = true -> null
+          - encrypted             = false -> null
+          - iops                  = 120 -> null
+          - volume_id             = "vol-05412b4a5320e0b1e" -> null
+          - volume_size           = 40 -> null
+          - volume_type           = "gp2" -> null
+        }
+    }
+
+  # aws_key_pair.ptfe-key will be destroyed
+  - resource "aws_key_pair" "ptfe-key" {
+      - fingerprint = "01:ca:46:0b:ea:ba:4e:28:0e:c9:b4:9e:2d:f3:29:66" -> null
+      - id          = "ptfe-key" -> null
+      - key_name    = "ptfe-key" -> null
+      - public_key  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC704xhVAxg9Bhq0jIbABWVjKl2DW7apvfFj3UtvActT9a9w1Xt5Fa2jEFuzMXceFtpDjgq5j8E8vsrICu8Wpeqwuo2SR2aAjEjBDfJzOM3kmF9wuWdpacDhVm1luPJiqqM4wLAPufht5vhdlqD8QtW/q84MMHbbkXNjdvgqsIcvDWcCRLQDa1Du3ElF9V+/n182ihIDfQCUtQS0zc9lIcUemZMSLRhxAWA9BZYCu8wnUuLBE/fv8apC0NxOayklSBEj7Pk/HxJnYxTeskqGs5MkzHydObPZSnAtX4Hfe1KlmsAVwt6Sj2bG2AYpt9G0jF7Oq9sYQ6nBTMAxENIsmhB andrii@guselietovs-mbp.home" -> null
+    }
+
+  # module.dns_godaddy.godaddy_domain_record.dns_godaddy_record will be destroyed
+  - resource "godaddy_domain_record" "dns_godaddy_record" {
+      - addresses = [] -> null
+      - domain    = "guselietov.com" -> null
+      - id        = "266392926" -> null
+
+      - record {
+          - data     = "18.184.220.142" -> null
+          - name     = "ptfe-pm-1_backend" -> null
+          - priority = 0 -> null
+          - ttl      = 600 -> null
+          - type     = "A" -> null
+        }
+      - record {
+          - data     = "@" -> null
+          - name     = "www" -> null
+          - priority = 0 -> null
+          - ttl      = 3600 -> null
+          - type     = "CNAME" -> null
+        }
+      - record {
+          - data     = "_domainconnect.gd.domaincontrol.com" -> null
+          - name     = "_domainconnect" -> null
+          - priority = 0 -> null
+          - ttl      = 3600 -> null
+          - type     = "CNAME" -> null
+        }
+      - record {
+          - data     = "ag-tfe-clb-493767462.eu-central-1.elb.amazonaws.com" -> null
+          - name     = "ptfe-pm-1" -> null
+          - priority = 0 -> null
+          - ttl      = 600 -> null
+          - type     = "CNAME" -> null
+        }
+      - record {
+          - data     = "null" -> null
+          - name     = "_acme-challenge.acme-cert-test-a" -> null
+          - priority = 0 -> null
+          - ttl      = 600 -> null
+          - type     = "TXT" -> null
+        }
+      - record {
+          - data     = "null" -> null
+          - name     = "_acme-challenge.cert-test-a" -> null
+          - priority = 0 -> null
+          - ttl      = 600 -> null
+          - type     = "TXT" -> null
+        }
+      - record {
+          - data     = "null" -> null
+          - name     = "_acme-challenge.ptfe-pm-1" -> null
+          - priority = 0 -> null
+          - ttl      = 600 -> null
+          - type     = "TXT" -> null
+        }
+      - record {
+          - data     = "null" -> null
+          - name     = "_acme-challenge.ptfe-vagrant" -> null
+          - priority = 0 -> null
+          - ttl      = 600 -> null
+          - type     = "TXT" -> null
+        }
+    }
+
+  # module.sslcert_letsencrypt.acme_certificate.certificate will be destroyed
+  - resource "acme_certificate" "certificate" {
+      - account_key_pem    = (sensitive value)
+      - certificate_domain = "ptfe-pm-1.guselietov.com" -> null
+      - certificate_p12    = (sensitive value)
+      - certificate_pem    = "-----BEGIN CERTIFICATE-----\nMIIFajCCBFKgAwIBAgISA1pe0gKgmrT5JqTZmuUPm9+1MA0GCSqGSIb3DQEBCwUA\nMEoxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MSMwIQYDVQQD\nExpMZXQncyBFbmNyeXB0IEF1dGhvcml0eSBYMzAeFw0xOTEwMjgxMDE3MzhaFw0y\nMDAxMjYxMDE3MzhaMCMxITAfBgNVBAMTGHB0ZmUtcG0tMS5ndXNlbGlldG92LmNv\nbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANufeS6FzAG8mGce0VBk\n3cSmLyu9TT9+Of+MfUkZJh++l5PM3jKqDAcTgeeZeLdY1oTRYExZ+dfAllniaDEp\nyMjMJt/toKUzSdErCEJesX58ri+03fYjFyrmb7YHieXAx03wUjFSmn0ypLS2SVRm\nO8Le8p5wsr234QcN0+O/x28dhQYN/E6fcW/6gScFE1o/0wXqBpn3SRbxPWKDlwYF\nfJ5PSTDpso+ZLhymE/pyke6AGu+oTgxcBx2hFoU3kWvAZDaxGtt4ghvXDQuNZGbX\nscj5zQQlgzJShZr6j7rBoIAft2PM6Cioa3Uen9hkG5ga3/bViBXWUea2/oB7gkqG\nzw8CAwEAAaOCAm8wggJrMA4GA1UdDwEB/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEF\nBQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUc4JP8rBvwx8w\n9yWY6ClLRdspLmUwHwYDVR0jBBgwFoAUqEpqYwR93brm0Tm3pkVl7/Oo7KEwbwYI\nKwYBBQUHAQEEYzBhMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcC5pbnQteDMubGV0\nc2VuY3J5cHQub3JnMC8GCCsGAQUFBzAChiNodHRwOi8vY2VydC5pbnQteDMubGV0\nc2VuY3J5cHQub3JnLzAjBgNVHREEHDAaghhwdGZlLXBtLTEuZ3VzZWxpZXRvdi5j\nb20wTAYDVR0gBEUwQzAIBgZngQwBAgEwNwYLKwYBBAGC3xMBAQEwKDAmBggrBgEF\nBQcCARYaaHR0cDovL2Nwcy5sZXRzZW5jcnlwdC5vcmcwggEGBgorBgEEAdZ5AgQC\nBIH3BIH0APIAdwBep3P531bA57U2SH3QSeAyepGaDIShEhKEGHWWgXFFWAAAAW4S\nFfLtAAAEAwBIMEYCIQDUjLko9xspewX02PRTO8y9FVUBjKFGBlQtyUREbT2JAAIh\nAKePFJ8b5u6UdgPKX435UxQghrNKDRW9Qi5ZL48KBXMfAHcAB7dcG+V9aP/xsMYd\nIxXHuuZXfFeUt2ruvGE6GmnTohwAAAFuEhXzDgAABAMASDBGAiEAwMnndTt4f6WC\nwG3qVqJl9HR6n01vyS6VgYSuQYmL2YQCIQCDfTz0uD1wnkph6ftgVoc8uwPlF7Wc\nJZKAnEZv+XgbDjANBgkqhkiG9w0BAQsFAAOCAQEAN6NnV0X6dsLYN5RXUFMxXNAB\nz24onsPOREMP2xAivK2urLl5W0BDOTLDlI0BPNHo/9leoLH471ferEhPOpA+bfqB\nGcziFxIXrBbroAF/CNL7YajD/Xz0HhJDH/XSueEZHKzvnIyPZ9lr1b0awaO7TEJc\nPMovDD5JveZ0glNtK2xWTNmocx4dvy3BwUWeVr6O7mXD7sZHljmONi5GTF1L7bBi\nnk8Krf9o+c2IDnNQuqx8wplzd5FfA60SGandtT71whBklt4erKWjGXI+hXrL0S4C\nK8NHTDTAL3wJFZ5ltu/JIgz42ECwODUHmSQIies655eMNdfyZkO9zqcIH3dSvg==\n-----END CERTIFICATE-----\n" -> null
+      - certificate_url    = "https://acme-v02.api.letsencrypt.org/acme/cert/035a5ed202a09ab4f926a4d99ae50f9bdfb5" -> null
+      - common_name        = "ptfe-pm-1.guselietov.com" -> null
+      - id                 = "https://acme-v02.api.letsencrypt.org/acme/cert/035a5ed202a09ab4f926a4d99ae50f9bdfb5" -> null
+      - issuer_pem         = "-----BEGIN CERTIFICATE-----\nMIIEkjCCA3qgAwIBAgIQCgFBQgAAAVOFc2oLheynCDANBgkqhkiG9w0BAQsFADA/\nMSQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT\nDkRTVCBSb290IENBIFgzMB4XDTE2MDMxNzE2NDA0NloXDTIxMDMxNzE2NDA0Nlow\nSjELMAkGA1UEBhMCVVMxFjAUBgNVBAoTDUxldCdzIEVuY3J5cHQxIzAhBgNVBAMT\nGkxldCdzIEVuY3J5cHQgQXV0aG9yaXR5IFgzMIIBIjANBgkqhkiG9w0BAQEFAAOC\nAQ8AMIIBCgKCAQEAnNMM8FrlLke3cl03g7NoYzDq1zUmGSXhvb418XCSL7e4S0EF\nq6meNQhY7LEqxGiHC6PjdeTm86dicbp5gWAf15Gan/PQeGdxyGkOlZHP/uaZ6WA8\nSMx+yk13EiSdRxta67nsHjcAHJyse6cF6s5K671B5TaYucv9bTyWaN8jKkKQDIZ0\nZ8h/pZq4UmEUEz9l6YKHy9v6Dlb2honzhT+Xhq+w3Brvaw2VFn3EK6BlspkENnWA\na6xK8xuQSXgvopZPKiAlKQTGdMDQMc2PMTiVFrqoM7hD8bEfwzB/onkxEz0tNvjj\n/PIzark5McWvxI0NHWQWM6r6hCm21AvA2H3DkwIDAQABo4IBfTCCAXkwEgYDVR0T\nAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAYYwfwYIKwYBBQUHAQEEczBxMDIG\nCCsGAQUFBzABhiZodHRwOi8vaXNyZy50cnVzdGlkLm9jc3AuaWRlbnRydXN0LmNv\nbTA7BggrBgEFBQcwAoYvaHR0cDovL2FwcHMuaWRlbnRydXN0LmNvbS9yb290cy9k\nc3Ryb290Y2F4My5wN2MwHwYDVR0jBBgwFoAUxKexpHsscfrb4UuQdf/EFWCFiRAw\nVAYDVR0gBE0wSzAIBgZngQwBAgEwPwYLKwYBBAGC3xMBAQEwMDAuBggrBgEFBQcC\nARYiaHR0cDovL2Nwcy5yb290LXgxLmxldHNlbmNyeXB0Lm9yZzA8BgNVHR8ENTAz\nMDGgL6AthitodHRwOi8vY3JsLmlkZW50cnVzdC5jb20vRFNUUk9PVENBWDNDUkwu\nY3JsMB0GA1UdDgQWBBSoSmpjBH3duubRObemRWXv86jsoTANBgkqhkiG9w0BAQsF\nAAOCAQEA3TPXEfNjWDjdGBX7CVW+dla5cEilaUcne8IkCJLxWh9KEik3JHRRHGJo\nuM2VcGfl96S8TihRzZvoroed6ti6WqEBmtzw3Wodatg+VyOeph4EYpr/1wXKtx8/\nwApIvJSwtmVi4MFU5aMqrSDE6ea73Mj2tcMyo5jMd6jmeWUHK8so/joWUoHOUgwu\nX4Po1QYz+3dszkDqMp4fklxBwXRsW10KXzPMTZ+sOPAveyxindmjkW8lGy+QsRlG\nPfZ+G6Z6h7mjem0Y+iWlkYcV4PIWL1iwBi8saCbGS5jN2p8M+X+Q7UNKEkROb3N6\nKOqkqm57TH2H3eDJAkSnh6/DNFu0Qg==\n-----END CERTIFICATE-----\n" -> null
+      - key_type           = "2048" -> null
+      - min_days_remaining = 30 -> null
+      - must_staple        = false -> null
+      - private_key_pem    = (sensitive value)
+
+      - dns_challenge {
+          - config   = (sensitive value)
+          - provider = "godaddy" -> null
+        }
+    }
+
+  # module.sslcert_letsencrypt.acme_registration.reg will be destroyed
+  - resource "acme_registration" "reg" {
+      - account_key_pem  = (sensitive value)
+      - email_address    = "andrii@guselietov.com" -> null
+      - id               = "https://acme-v02.api.letsencrypt.org/acme/acct/70466164" -> null
+      - registration_url = "https://acme-v02.api.letsencrypt.org/acme/acct/70466164" -> null
+    }
+
+  # module.sslcert_letsencrypt.local_file.ssl_cert_bundle_file will be destroyed
+  - resource "local_file" "ssl_cert_bundle_file" {
+      - directory_permission = "0777" -> null
+      - file_permission      = "0777" -> null
+      - filename             = "./site_ssl_cert_bundle.pem" -> null
+      - id                   = "cf73fea18352a3cefa41c9685b51bcae065bdfbc" -> null
+      - sensitive_content    = (sensitive value)
+    }
+
+  # module.sslcert_letsencrypt.local_file.ssl_cert_file will be destroyed
+  - resource "local_file" "ssl_cert_file" {
+      - directory_permission = "0777" -> null
+      - file_permission      = "0777" -> null
+      - filename             = "./site_ssl_cert.pem" -> null
+      - id                   = "7ecfdf3d4cd128ffc44fbf7f6434352adfdd0d13" -> null
+      - sensitive_content    = (sensitive value)
+    }
+
+  # module.sslcert_letsencrypt.local_file.ssl_private_key_file will be destroyed
+  - resource "local_file" "ssl_private_key_file" {
+      - directory_permission = "0777" -> null
+      - file_permission      = "0777" -> null
+      - filename             = "./site_ssl_private_key.pem" -> null
+      - id                   = "f4541a6e7cf0bd68c52883361ce5f346b5ecd156" -> null
+      - sensitive_content    = (sensitive value)
+    }
+
+  # module.sslcert_letsencrypt.tls_private_key.private_key will be destroyed
+  - resource "tls_private_key" "private_key" {
+      - algorithm                  = "RSA" -> null
+      - ecdsa_curve                = "P224" -> null
+      - id                         = "62b12a9842f1a32341c4306df85397109c5e54de" -> null
+      - private_key_pem            = (sensitive value)
+      - public_key_fingerprint_md5 = "a6:26:79:39:79:0a:d5:3b:c4:10:d4:57:09:15:56:58" -> null
+      - public_key_openssh         = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDpeqIX0L7u7lvFXVlkV00WzsiIYofANC1/dTNjlnY8n48gAJQNu1Wbi1kwCg75ECydjs2wNDSTL4xdI7DoUGRRS33XttKarYiEhff91uKidOAkmdprFUc0adbg2OZXeC4j9X5UBl+xnqP8TK+QrwLaHtCNDzsxLXMBnHLYCqa74h3F9agfE7G833Ctr07WEcqpiG8dy5F6suGLhrw33SXIdAWvkfcZs3hfxaZiaiNwzzp6ORVUbxdeL5a3g5CsKhyhLkW0aIf/8X+W1DNFNhlItzw1GxjG/H4Wxu5J/r13Cs0D7ZsQL5ijWGY1TdUItkClH1+fZx0hAn5mopu7Muuz\n" -> null
+      - public_key_pem             = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6XqiF9C+7u5bxV1ZZFdN\nFs7IiGKHwDQtf3UzY5Z2PJ+PIACUDbtVm4tZMAoO+RAsnY7NsDQ0ky+MXSOw6FBk\nUUt917bSmq2IhIX3/dbionTgJJnaaxVHNGnW4NjmV3guI/V+VAZfsZ6j/EyvkK8C\n2h7QjQ87MS1zAZxy2Aqmu+IdxfWoHxOxvN9wra9O1hHKqYhvHcuRerLhi4a8N90l\nyHQFr5H3GbN4X8WmYmojcM86ejkVVG8XXi+Wt4OQrCocoS5FtGiH//F/ltQzRTYZ\nSLc8NRsYxvx+FsbuSf69dwrNA+2bEC+Yo1hmNU3VCLZApR9fn2cdIQJ+ZqKbuzLr\nswIDAQAB\n-----END PUBLIC KEY-----\n" -> null
+      - rsa_bits                   = 2048 -> null
+    }
+
+  # module.vpc_aws.aws_internet_gateway.ag_tfe_GW will be destroyed
+  - resource "aws_internet_gateway" "ag_tfe_GW" {
+      - id       = "igw-0e5a3f544443278e4" -> null
+      - owner_id = "729476260648" -> null
+      - tags     = {
+          - "Name" = "ag_ptfe_pm_internet_gateway"
+        } -> null
+      - vpc_id   = "vpc-021fc971320c114da" -> null
+    }
+
+  # module.vpc_aws.aws_route.ag_tfe_internet_access will be destroyed
+  - resource "aws_route" "ag_tfe_internet_access" {
+      - destination_cidr_block = "0.0.0.0/0" -> null
+      - gateway_id             = "igw-0e5a3f544443278e4" -> null
+      - id                     = "r-rtb-027922e6f41ea6cec1080289494" -> null
+      - origin                 = "CreateRoute" -> null
+      - route_table_id         = "rtb-027922e6f41ea6cec" -> null
+      - state                  = "active" -> null
+    }
+
+  # module.vpc_aws.aws_route_table.ag_tfe_route_table will be destroyed
+  - resource "aws_route_table" "ag_tfe_route_table" {
+      - id               = "rtb-027922e6f41ea6cec" -> null
+      - owner_id         = "729476260648" -> null
+      - propagating_vgws = [] -> null
+      - route            = [
+          - {
+              - cidr_block                = "0.0.0.0/0"
+              - egress_only_gateway_id    = ""
+              - gateway_id                = "igw-0e5a3f544443278e4"
+              - instance_id               = ""
+              - ipv6_cidr_block           = ""
+              - nat_gateway_id            = ""
+              - network_interface_id      = ""
+              - transit_gateway_id        = ""
+              - vpc_peering_connection_id = ""
+            },
+        ] -> null
+      - tags             = {
+          - "Name" = "ag_ptfe_pm_route_table"
+        } -> null
+      - vpc_id           = "vpc-021fc971320c114da" -> null
+    }
+
+  # module.vpc_aws.aws_route_table_association.ag_tfe_association will be destroyed
+  - resource "aws_route_table_association" "ag_tfe_association" {
+      - id             = "rtbassoc-01073a73db968d172" -> null
+      - route_table_id = "rtb-027922e6f41ea6cec" -> null
+      - subnet_id      = "subnet-035efb5920f2abe6f" -> null
+    }
+
+  # module.vpc_aws.aws_security_group.ag_tfe_Security_Group will be destroyed
+  - resource "aws_security_group" "ag_tfe_Security_Group" {
+      - arn                    = "arn:aws:ec2:eu-central-1:729476260648:security-group/sg-0e85e52db22f05849" -> null
+      - description            = "ag_ptfe_pm Security Group" -> null
+      - egress                 = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = ""
+              - from_port        = 1024
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 65535
+            },
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = ""
+              - from_port        = 443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 443
+            },
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = ""
+              - from_port        = 80
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 80
+            },
+        ] -> null
+      - id                     = "sg-0e85e52db22f05849" -> null
+      - ingress                = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = ""
+              - from_port        = 22
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 22
+            },
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = ""
+              - from_port        = 443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 443
+            },
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = ""
+              - from_port        = 8800
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 8800
+            },
+        ] -> null
+      - name                   = "ag_ptfe_pm Security Group" -> null
+      - owner_id               = "729476260648" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {
+          - "Name" = "ag_ptfe_pm_security_group"
+        } -> null
+      - vpc_id                 = "vpc-021fc971320c114da" -> null
+    }
+
+  # module.vpc_aws.aws_security_group.ag_tfe_Security_Group_elb will be destroyed
+  - resource "aws_security_group" "ag_tfe_Security_Group_elb" {
+      - arn                    = "arn:aws:ec2:eu-central-1:729476260648:security-group/sg-0fbe290e1224804fe" -> null
+      - description            = "ag_ptfe_pm ELB Security Group" -> null
+      - egress                 = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = ""
+              - from_port        = 0
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "-1"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 0
+            },
+        ] -> null
+      - id                     = "sg-0fbe290e1224804fe" -> null
+      - ingress                = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = ""
+              - from_port        = 443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 443
+            },
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = ""
+              - from_port        = 8800
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 8800
+            },
+        ] -> null
+      - name                   = "ag_ptfe_pm-sg-elb" -> null
+      - owner_id               = "729476260648" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {} -> null
+      - vpc_id                 = "vpc-021fc971320c114da" -> null
+    }
+
+  # module.vpc_aws.aws_subnet.ag_tfe_Subnet will be destroyed
+  - resource "aws_subnet" "ag_tfe_Subnet" {
+      - arn                             = "arn:aws:ec2:eu-central-1:729476260648:subnet/subnet-035efb5920f2abe6f" -> null
+      - assign_ipv6_address_on_creation = false -> null
+      - availability_zone               = "eu-central-1a" -> null
+      - availability_zone_id            = "euc1-az2" -> null
+      - cidr_block                      = "10.0.1.0/24" -> null
+      - id                              = "subnet-035efb5920f2abe6f" -> null
+      - map_public_ip_on_launch         = true -> null
+      - owner_id                        = "729476260648" -> null
+      - tags                            = {
+          - "Name" = "ag_ptfe_pm_subnet"
+        } -> null
+      - vpc_id                          = "vpc-021fc971320c114da" -> null
+    }
+
+  # module.vpc_aws.aws_vpc.ag_tfe will be destroyed
+  - resource "aws_vpc" "ag_tfe" {
+      - arn                              = "arn:aws:ec2:eu-central-1:729476260648:vpc/vpc-021fc971320c114da" -> null
+      - assign_generated_ipv6_cidr_block = false -> null
+      - cidr_block                       = "10.0.0.0/16" -> null
+      - default_network_acl_id           = "acl-063824694baf7220a" -> null
+      - default_route_table_id           = "rtb-05ed82ec870fdc273" -> null
+      - default_security_group_id        = "sg-0ae6f98e504926011" -> null
+      - dhcp_options_id                  = "dopt-4f934827" -> null
+      - enable_dns_hostnames             = true -> null
+      - enable_dns_support               = true -> null
+      - id                               = "vpc-021fc971320c114da" -> null
+      - instance_tenancy                 = "default" -> null
+      - main_route_table_id              = "rtb-05ed82ec870fdc273" -> null
+      - owner_id                         = "729476260648" -> null
+      - tags                             = {
+          - "Name" = "ag_ptfe_pm"
+        } -> null
+    }
+
+Plan: 0 to add, 0 to change, 18 to destroy.
+
+Do you really want to destroy all resources?
+  Terraform will destroy all your managed infrastructure, as shown above.
+  There is no undo. Only 'yes' will be accepted to confirm.
+
+  Enter a value: yes
+
+module.sslcert_letsencrypt.local_file.ssl_private_key_file: Destroying... [id=f4541a6e7cf0bd68c52883361ce5f346b5ecd156]
+module.sslcert_letsencrypt.local_file.ssl_cert_bundle_file: Destroying... [id=cf73fea18352a3cefa41c9685b51bcae065bdfbc]
+module.sslcert_letsencrypt.local_file.ssl_cert_file: Destroying... [id=7ecfdf3d4cd128ffc44fbf7f6434352adfdd0d13]
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_record: Destroying... [id=266392926]
+module.sslcert_letsencrypt.local_file.ssl_cert_bundle_file: Destruction complete after 0s
+module.sslcert_letsencrypt.local_file.ssl_cert_file: Destruction complete after 0s
+module.sslcert_letsencrypt.local_file.ssl_private_key_file: Destruction complete after 0s
+module.sslcert_letsencrypt.acme_certificate.certificate: Destroying... [id=https://acme-v02.api.letsencrypt.org/acme/cert/035a5ed202a09ab4f926a4d99ae50f9bdfb5]
+module.sslcert_letsencrypt.acme_certificate.certificate: Destruction complete after 2s
+module.sslcert_letsencrypt.acme_registration.reg: Destroying... [id=https://acme-v02.api.letsencrypt.org/acme/acct/70466164]
+module.vpc_aws.aws_route_table_association.ag_tfe_association: Destroying... [id=rtbassoc-01073a73db968d172]
+module.vpc_aws.aws_route.ag_tfe_internet_access: Destroying... [id=r-rtb-027922e6f41ea6cec1080289494]
+module.vpc_aws.aws_route_table_association.ag_tfe_association: Destruction complete after 0s
+module.vpc_aws.aws_route.ag_tfe_internet_access: Destruction complete after 1s
+module.vpc_aws.aws_route_table.ag_tfe_route_table: Destroying... [id=rtb-027922e6f41ea6cec]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Destroying... [id=igw-0e5a3f544443278e4]
+module.sslcert_letsencrypt.acme_registration.reg: Destruction complete after 1s
+module.vpc_aws.aws_route_table.ag_tfe_route_table: Destruction complete after 0s
+module.sslcert_letsencrypt.tls_private_key.private_key: Destroying... [id=62b12a9842f1a32341c4306df85397109c5e54de]
+module.sslcert_letsencrypt.tls_private_key.private_key: Destruction complete after 0s
+module.dns_godaddy.godaddy_domain_record.dns_godaddy_record: Destruction complete after 6s
+aws_elb.ptfe_lb: Destroying... [id=ag-tfe-clb]
+aws_elb.ptfe_lb: Destruction complete after 0s
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group_elb: Destroying... [id=sg-0fbe290e1224804fe]
+aws_instance.ptfe: Destroying... [id=i-0f331bcd266642fcc]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Still destroying... [id=igw-0e5a3f544443278e4, 10s elapsed]
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group_elb: Still destroying... [id=sg-0fbe290e1224804fe, 10s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 10s elapsed]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Still destroying... [id=igw-0e5a3f544443278e4, 20s elapsed]
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group_elb: Still destroying... [id=sg-0fbe290e1224804fe, 20s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 20s elapsed]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Still destroying... [id=igw-0e5a3f544443278e4, 30s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 30s elapsed]
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group_elb: Still destroying... [id=sg-0fbe290e1224804fe, 30s elapsed]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Still destroying... [id=igw-0e5a3f544443278e4, 40s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 40s elapsed]
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group_elb: Still destroying... [id=sg-0fbe290e1224804fe, 40s elapsed]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Still destroying... [id=igw-0e5a3f544443278e4, 50s elapsed]
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group_elb: Destruction complete after 48s
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 50s elapsed]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Still destroying... [id=igw-0e5a3f544443278e4, 1m0s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 1m0s elapsed]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Still destroying... [id=igw-0e5a3f544443278e4, 1m10s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 1m10s elapsed]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Still destroying... [id=igw-0e5a3f544443278e4, 1m20s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 1m20s elapsed]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Still destroying... [id=igw-0e5a3f544443278e4, 1m30s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 1m30s elapsed]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Still destroying... [id=igw-0e5a3f544443278e4, 1m40s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 1m40s elapsed]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Still destroying... [id=igw-0e5a3f544443278e4, 1m50s elapsed]
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 1m50s elapsed]
+module.vpc_aws.aws_internet_gateway.ag_tfe_GW: Destruction complete after 1m57s
+aws_instance.ptfe: Still destroying... [id=i-0f331bcd266642fcc, 2m0s elapsed]
+aws_instance.ptfe: Destruction complete after 2m2s
+aws_key_pair.ptfe-key: Destroying... [id=ptfe-key]
+module.vpc_aws.aws_subnet.ag_tfe_Subnet: Destroying... [id=subnet-035efb5920f2abe6f]
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group: Destroying... [id=sg-0e85e52db22f05849]
+aws_key_pair.ptfe-key: Destruction complete after 0s
+module.vpc_aws.aws_security_group.ag_tfe_Security_Group: Destruction complete after 0s
+module.vpc_aws.aws_subnet.ag_tfe_Subnet: Destruction complete after 0s
+module.vpc_aws.aws_vpc.ag_tfe: Destroying... [id=vpc-021fc971320c114da]
+module.vpc_aws.aws_vpc.ag_tfe: Destruction complete after 0s
+
+Destroy complete! Resources: 18 destroyed.
